@@ -1,0 +1,77 @@
+<div class="row" style="text-align:center;" ng-if="vm.loading">   
+    <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading ...
+</div>
+<div ng-if="!vm.loading">    
+    <h3>
+        Edit: {{vm.recipe.name}}
+    </h3>
+    <form name="recipe" novalidate>
+        <!-- ============================================ Recipe ===================================== -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Recipe
+                </h3>
+            </div>
+            <div class="panel-body">
+                    <!-- ------------------------------------------------------ Name -->
+                    <div class="row">
+                        <div class="col-xs-4"><label>Name:</label></div>
+                        <div class="col-xs-8"><input type="text" class="form-control" ng-model="vm.recipe.name"></div>
+                    </div>
+                    <!-- -------------------------------------------------- Duration -->
+                    <div class="row">
+                        <div class="col-xs-4"><label>Duration (min):</label></div>
+                        <div class="col-xs-3"><input type="text" class="form-control" ng-model="vm.recipe.duration"></div>
+                    </div>
+                    <!-- ------------------------------------------------------ Type -->
+                    <div class="row">
+                        <div class="col-xs-4"><label>Category:</label></div>
+                        <div class="col-xs-6">
+                            <div id="category">
+                                <input  type="text" ng-model="vm.recipe.category" placeholder="Recipe type">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ----------------------------------------------- Description -->
+                    <div class="row">
+                        <div class="col-xs-4"><label>Description:</label></div>
+                        <div class="col-xs-8"><textarea  rows="10" class="form-control" ng-model="vm.recipe.description"></textarea></div>
+                    </div>
+                    <!-- ---------------------------------------------------- Serves -->
+                    <div class="row">
+                        <div class="col-xs-4"><label>Serves:</label></div>
+                        <div class="col-xs-3"><input type="text" class="form-control"ng-model="vm.recipe.serves"></div>
+                    </div>        
+            </div>
+        </div>
+       <!-- ============================================ Ingredients ===================================== -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    List of ingredients
+                </h3>
+            </div>
+            <div class="panel-body control-group">
+                <p class="col-xs-12">
+                    <input name="iname" autocomplete="off" id='ingredient' class="col-xs-4" type="text" placeholder="Name" ng-model="vm.ingredient" uib-typeahead="ingredient for ingredient in vm.ingredients | filter:$viewValue | limitTo:8" required>
+                    <input name="quantity" class="col-xs-4" type="text" placeholder="Quantity" ng-model="vm.quantity" ng-enter="vm.addIngredient('ingredient')" ng-pattern="vm.regex">
+                    <button type="button" ng-click="vm.addIngredient('ingredient')" ng-disabled="recipe.quantity.$invalid || recipe.quantity.$pristine || recipe.iname.$invalid">Add</button>                    
+                    <span style="color:#99ccff;font-size:1.25em;vertical-align:middle;" class="glyphicon glyphicon-question-sign" uib-popover="Quantity format should be: 'amount unit'"></span>
+                </p>               
+                 
+                <ul class="col-xs-12">
+                    <li ng-repeat="ingredient in vm.recipe.recipe_ingredients">                         
+                        <a ng-click="vm.deleteIngredient(ingredient.id)"><span style="color:#ff471a;font-size:0.75em;" class="glyphicon glyphicon glyphicon-minus-sign selectable"></span></a>
+                        {{ingredient.ingredient}} ( {{ingredient.quantity}} {{ingredient.unit}} )
+                    </li> 
+                </ul>
+
+            </div>
+        </div>
+        <p class="text-center">
+            <button type="button" ng-click="vm.cancel()">Cancel</button>
+            <button type="button" ng-click="vm.save()"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.saving"></span> Save</button>
+        </p>
+    </form>
+</div>

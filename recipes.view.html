@@ -1,0 +1,62 @@
+<div class="row" style="text-align:center;" ng-if="vm.loading">   
+    <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading ...
+</div>
+<div ng-if="!vm.loading">
+    <h3>Recipe list</h3>
+
+    <button type="button" style='float:right; margin:5px;' ng-click="vm.edit()">
+        <small><span class="glyphicon glyphicon-plus"></span> Add recipe</small>
+    </button>
+       
+    <div class="table-responsive">
+        <table class="table table-striped" style='margin:5px;'>
+            <colgroup>
+                <col class="col-xs-1">
+                <col class="col-md-6">
+                <col class="col-md-4">
+                <col class="col-md-1">
+            </colgroup>
+            <thead>
+                <tr>
+                    <td style="text-align:center; vertical-align:middle;"><span class="glyphicon glyphicon-shopping-cart"></span> </td>
+                    <td>
+                        <form class="form-horizontal">
+                            <div class="has-feedback">
+                                <input type="text" class="form-control" placeholder="Name" ng-model="vm.nameFilter">
+                                <span ng-if="vm.nameFilter"
+                                      ng-click="vm.clearNameFilter()"
+                                      class="glyphicon glyphicon-remove-circle form-control-feedback" 
+                                      style="cursor: pointer; color:#cccccc; pointer-events: all;">
+                                </span>
+                            </div>
+                        </form>
+                    </td>
+                    <td>
+                        <form class="form-horizontal">
+                            <div class="has-feedback">
+                                <input type="text" class="form-control" placeholder="Category" ng-model="vm.categoryFilter">
+                                <span ng-if="vm.categoryFilter"
+                                      ng-click="vm.clearCategoryFilter()"
+                                      class="glyphicon glyphicon-remove-circle form-control-feedback" 
+                                      style="cursor: pointer; color:#cccccc; pointer-events: all;">
+                                </span>
+                            </div>
+                        </form>
+                    </td>
+                    <td style="text-align:center; vertical-align:middle;">Duration</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="recipe in vm.recipes | filter:{name:vm.nameFilter, category:vm.categoryFilter} | orderBy: 'duration'">
+                    <td style="text-align:center"><input type="checkbox" ng-model="recipe.inShoppingList" ng-change="vm.selectRecipe(recipe)"/></td>
+                    <td><a ui-sref="recipe({id:'{{recipe.id}}'})">{{recipe.name}}</a></td>
+                    <td>{{recipe.category}}</td>
+                    <td>{{recipe.duration}} min</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>    
+    <button type="button" style='float:right; margin:5px;' ng-click="vm.edit()">
+        <small><span class="glyphicon glyphicon-plus"></span> Add recipe</small>
+    </button>    
+</div>

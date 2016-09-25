@@ -1,0 +1,55 @@
+<div class="row" style="text-align:center;" ng-if="vm.loading">   
+    <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading ...
+</div>
+<div ng-if="!vm.loading">
+    <h3>
+        {{vm.recipe.name}}
+        <small>(in shopping list)</small>
+    </h3>
+    <div class="panel text-right">        
+        <button type="button" class="btn btn-xs btn-default" ng-if="vm.recipeInList">
+            Add to <span class="glyphicon glyphicon-shopping-cart"></span> 
+        </button> 
+        <button type="button" class="btn btn-xs btn-default" ng-if="vm.recipeInList">
+            Remove from <span class="glyphicon glyphicon-shopping-cart"></span> 
+        </button>        
+        <button type="button" ng-click="vm.edit()">
+            Edit
+        </button>
+        <button type="button"  ng-click="vm.remove()">
+            Delete
+            <span class="glyphicon glyphicon-trash" ng-if="!vm.deleting"></span>
+            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.deleting"></span>
+        </button>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Recipe  <i>({{vm.recipe.duration}} min.)</i> - {{vm.recipe.category}}
+            </h3>
+        </div>
+        <div class="panel-body">            
+            <div ng-repeat="paragraph in vm.recipeDescription track by $index">{{paragraph}}</div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                List of ingredients <i>({{vm.recipe.serves}} serves)</i>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <ul>
+                <li ng-repeat="ingredient in vm.recipe.recipe_ingredients">
+                    {{ingredient.ingredient}} ( {{ingredient.quantity}} {{ingredient.unit}} )
+                </li> 
+            </ul>
+        </div>
+    </div>
+    
+    <div style="text-align:center;" >
+        <a ui-sref="recipes"><i>back to recipes</i></a>
+    </div>
+</div>
