@@ -5,9 +5,9 @@
         .module('app')
         .factory('DataService', DataService);
 
-    DataService.$inject = ['$http', '$log', '$q'];
+    DataService.$inject = ['$http', '$log', '$q','$rootScope'];
 
-    function DataService($http, $log, $q) {
+    function DataService($http, $log, $q, $rootScope) {
         return {
             getRecipes: getRecipes,
             getRecipe: getRecipe,            
@@ -30,7 +30,7 @@
         }
 
         function getRecipes() {
-            return $http.get('/api/recipes');               
+            return $http.get($rootScope.service+'/recipes');               
         }        
        
         function getRecipe(recipe,id) {
@@ -38,7 +38,7 @@
            var deferred;
             
             if ((recipe == null) & (id != '')){
-                deferred= $http.get('/api/recipe/'+id);                
+                deferred= $http.get($rootScope.service+'/recipe/'+id);                
             } else { 
                 if ((recipe == null) & (id == '')){
                     recipe = Recipe();
@@ -49,18 +49,18 @@
         }
         
         function setRecipe(recipe) {                            
-            return $http.post('/api/recipe/'+recipe.id, recipe)                
+            return $http.post($rootScope.service+'/recipe/'+recipe.id, recipe)                
         }
         
         function deleteRecipe(id){
-            return $http.delete('/api/recipe/'+id);            
+            return $http.delete($rootScope.service+'/recipe/'+id);            
         }
         
         function getIngredients(){
             //var deferred = $q.defer();
             //deferred.resolve(['marar','drojdie','apa','fasole']);
             //return deferred.promise;
-            return $http.get('/api/ingredients')
+            return $http.get($rootScope.service+'/ingredients')
         }
         
         function updateShoppingListRecipe(recipe) {

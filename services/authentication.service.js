@@ -18,12 +18,12 @@
 
         function login(username, password, successCallback, errorCallback) {
             $http.defaults.useXDomain = true;           
-            $http.post('/api/login', { username: username, password: password }).then(successCallback,errorCallback);               
+            $http.post($rootScope.service+'/login', { username: username, password: password }).then(successCallback,errorCallback);               
         }
         
         function logout(successCallback, errorCallback) {
             $http.defaults.useXDomain = true;           
-            $http.get('/api/logout').then(successCallback,errorCallback);               
+            $http.get($rootScope.service+'/logout').then(successCallback,errorCallback);               
         }
 
         function setCredentials(token) {

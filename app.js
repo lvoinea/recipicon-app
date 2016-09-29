@@ -136,11 +136,15 @@
             
             //Configure CSRF
             $httpProvider.defaults.xsrfCookieName = 'csrftoken';
-            $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+            $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';          
+            
     }
 
     run.$inject = ['$rootScope', '$location', '$cookieStore', '$http'];
     function run($rootScope, $location, $cookieStore, $http) {
+        
+        //Configure service path
+        $rootScope.service = '/api';
         
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};
