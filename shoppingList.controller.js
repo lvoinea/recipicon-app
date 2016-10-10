@@ -3,33 +3,35 @@
     
     angular.module('app').controller('ShoppingListController', ShoppingListController);
     
-    ShoppingListController.$inject = ['DataService', '$log'];
+    ShoppingListController.$inject = ['DataService', 'AlertService', '$log', '$stateParams'];
 
-    function ShoppingListController(DataService,$log){
+    function ShoppingListController(DataService, AlertService, $log, $stateParams){
         var vm = this;
-        vm.recipes =[];
-        vm.selectRecipe = selectRecipe;
+        vm.shoppingList = {};
+        vm.ingredients = [];
         
-        //activate();
+        vm.loading = false;
 
-        function activate() {
-            return getRecipes().then(function() {
-                $log.info('Activated Recipes View');
+        loadShoppingList($stateParams.id)
+       
+        function loadShoppingList(id){
+            $log.info('loading shopping list: '+ id);
+            vm.loading = true;
+            
+            DataService.getShoppingList(id)
+            .then(function(response){
+                vm.shoppingList = response.data;
+                return DataService.getIngredients();
+            })
+            .then(function(ingredients){
+                vm.ingredients = ingredients.data.map(function(item){return item.name});               
+            })
+            .catch(function(error){
+                AlertService.setAlert('ERROR: Could not load shopping llist (code  ' + error.status + ').');
+            })
+            .finally(function(){
+                 vm.loading = false;
             });
-        }
-
-        function getRecipes() {
-            return DataService.getRecipes()
-                .then(function(data) {
-                    vm.recipes = data;
-                    console.log(data);
-                    return vm.recipes;
-                });
-        }
-        
-        function selectRecipe(recipe){
-            return DataService.updateShoppingListRecipe(recipe);
-        }
-        
+        }        
     };
 })();

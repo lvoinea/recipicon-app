@@ -14,7 +14,10 @@
             setRecipe: setRecipe,
             deleteRecipe: deleteRecipe,
             getIngredients : getIngredients,
-            updateShoppingListRecipe: updateShoppingListRecipe
+            getShoppingList : getShoppingList,
+            updateShoppingListRecipe: updateShoppingListRecipe,
+            addShoppingListRecipe : addShoppingListRecipe,
+            removeShoppingListRecipe : removeShoppingListRecipe
         };
         
         function Recipe(){
@@ -25,9 +28,17 @@
                 'description' : '',
                 'serves' : 2,
                 'duration' : 30,
-                'recipe_ingredients' : []
+                'recipe_ingredients' : [],
+                'in_shopping_list' : false
             }
         }
+        
+        function ShoppingListCommand(cmd){
+            return {
+                'action' : cmd
+            }
+        }        
+
 
         function getRecipes() {
             return $http.get($rootScope.service+'/recipes');               
@@ -63,6 +74,10 @@
             return $http.get($rootScope.service+'/ingredients')
         }
         
+        function getShoppingList(id){
+            return $http.get($rootScope.service+'/shopping-list/'+id);
+        }
+        
         function updateShoppingListRecipe(recipe) {
             
             return $http({
@@ -89,5 +104,14 @@
             
             //url: "/setShoppingListItem.php",
         }
+        
+        function addShoppingListRecipe(id){
+            return $http.post($rootScope.service+'/shopping-list/_/recipe/'+id, ShoppingListCommand('add'));
+        }
+        
+        function removeShoppingListRecipe(id){
+             return $http.post($rootScope.service+'/shopping-list/_/recipe/'+id, ShoppingListCommand('remove'));
+        }
+        
     }
 })();

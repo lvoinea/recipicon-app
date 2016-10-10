@@ -1,5 +1,72 @@
-<h2>Shopping list
-
-</h2>
+<div class="row" style="text-align:center;" ng-if="vm.loading">   
+    <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading ...
+</div>
+<div ng-if="!vm.loading">
+    <h3>
+        Edit shopping list: {{vm.shoppingList.name}} 
+        <small>({{vm.shoppingList.date}})</small>
+    </h3>
+    <form name="recipe" novalidate>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                   Name
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-xs-8"><input type="text" placeholder="optional name" class="form-control" ng-model="vm.shoppingList.name"></div>
+            </div>
+        </div>
+        
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                   Recipes
+                </h3>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    <li ng-repeat="item in vm.shoppingList.items | filter:{ingredient:null}">
+                        {{item.recipe.name}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                   Extra ingredients
+                </h3>
+            </div>
+            <div class="panel-body control-group">
+            
+                <p class="col-xs-12">                
+                    <input name="iname" autocomplete="off" id='ingredient' class="col-xs-4" type="text" placeholder="Name" ng-model="vm.ingredient" uib-typeahead="ingredient for ingredient in vm.ingredients | filter:$viewValue | limitTo:8" required>
+                    <input name="quantity" class="col-xs-4" type="text" placeholder="Quantity" ng-model="vm.quantity" ng-enter="vm.addIngredient('ingredient')" ng-pattern="vm.regex">
+                    <button type="button" ng-click="vm.addIngredient('ingredient')" ng-disabled="recipe.quantity.$invalid || recipe.quantity.$pristine || recipe.iname.$invalid">Add</button>                    
+                    <span style="color:#99ccff;font-size:1.25em;vertical-align:middle;" class="glyphicon glyphicon-question-sign" uib-popover="Quantity format should be: 'amount unit'"></span>
+                </p>
+                
+                <div class="col-xs-12">
+                <ul>
+                    <li ng-repeat="item in vm.shoppingList.items | filter:{recipe:null}">
+                         <a ng-click="vm.deleteIngredient(item.id)">
+                         <span style="color:#ff471a;font-size:0.75em;" class="glyphicon glyphicon glyphicon-minus-sign selectable"></span></a>
+                        {{item.ingredient}} ( {{item.quantity}} {{item.unit}} )
+                   
+                    </li>
+                </ul>
+                </div>
+            </div>
+        </div>
+        
+        <p class="text-center">
+                <button type="button" ng-click="vm.cancel()">Cancel</button>
+                <button type="button" ng-click="vm.save()"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.saving"></span> Save</button>
+        </p>
+    </form>
+    
+</div>
 
 

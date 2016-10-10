@@ -76,7 +76,7 @@
             })
             
             .state('shopping-list', {
-                url: '/shopping-list',
+                url: '/shopping-list/:id',
                 views : {
                     "r-header": {
                         templateUrl: "header.html",

@@ -23,11 +23,14 @@
         vm.save = save;
         vm.edit = edit;
         vm.cancel = cancel;
-        vm.remove = remove;        
+        vm.remove = remove;   
+        vm.addToBasket = addToBasket;
+        vm.removeFromBasket = removeFromBasket;
         
         vm.loading = false;
         vm.saving = false;
-        vm.deleting = false;     
+        vm.deleting = false; 
+        vm.selecting = false;
 
         //todo: add receipe to current shopping list (create one if not available, and register it in user profile)
         //todo: get wheter recipe is in shopping list
@@ -37,7 +40,7 @@
         loadRecipe($stateParams.recipe, $stateParams.id);            
         
         function loadRecipe(recipe,id) {            
-            $log.info('load recipe ('+ id + ',' + recipe + ')');            
+            $log.info('loading recipe ('+ id + ',' + recipe + ')');            
             vm.loading = true;
             
             DataService.getRecipe(recipe,id)
@@ -131,7 +134,35 @@
                     vm.deleting = false;
                 });        
         }
-
+        
+        function addToBasket(){
+            vm.selecting = true;
+            DataService.addShoppingListRecipe(vm.recipe.id)
+                .then(function(response){
+                    vm.recipe.in_shopping_list = true;
+                })
+                .catch(function(error){
+                    AlertService.setAlert('ERROR: Could not add receipe to shoopping list  (code ' + error.status + ').');
+                })
+                .finally(function(){
+                    vm.selecting = false;
+                });
+            
+        }
+        
+        function removeFromBasket(){
+            vm.selecting = true;
+            DataService.removeShoppingListRecipe(vm.recipe.id)
+                .then(function(response){
+                    vm.recipe.in_shopping_list = false;
+                })
+                .catch(function(error){
+                    AlertService.setAlert('ERROR: Could not remove recipe from shoopping list  (code ' + error.status + ').');
+                })
+                .finally(function(){
+                    vm.selecting = false;
+                });
+        }
              
     };
 })();
