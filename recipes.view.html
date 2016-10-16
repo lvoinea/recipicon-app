@@ -48,7 +48,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="recipe in vm.recipes | filter:{name:vm.nameFilter, category:vm.categoryFilter} | orderBy: 'duration'">
-                    <td style="text-align:center"><input type="checkbox" ng-model="recipe.inShoppingList" ng-change="vm.selectRecipe(recipe)"/></td>
+                    <td style="text-align:center"><input type="checkbox" ng-model="recipe.in_shopping_list" ng-change="vm.selectRecipe(recipe)"/></td>
                     <td><a ui-sref="recipe({id:'{{recipe.id}}'})">{{recipe.name}}</a></td>
                     <td>{{recipe.category}}</td>
                     <td>{{recipe.duration}} min</td>

@@ -60,12 +60,14 @@
                     <span style="color:#99ccff;font-size:1.25em;vertical-align:middle;" class="glyphicon glyphicon-question-sign" uib-popover="Quantity format should be: 'amount unit'"></span>
                 </p>               
                  
-                <ul class="col-xs-12">
-                    <li ng-repeat="ingredient in vm.recipe.recipe_ingredients">                         
-                        <a ng-click="vm.deleteIngredient(ingredient.id)"><span style="color:#ff471a;font-size:0.75em;" class="glyphicon glyphicon glyphicon-minus-sign selectable"></span></a>
-                        {{ingredient.ingredient}} ( {{ingredient.quantity}} {{ingredient.unit}} )
-                    </li> 
-                </ul>
+                <div class="col-xs-12">
+                    <ul>
+                        <li ng-repeat="ingredient in vm.recipe.recipe_ingredients">                         
+                            <a ng-click="vm.deleteIngredient(ingredient.id)"><span style="color:#ff471a;font-size:0.75em;" class="glyphicon glyphicon glyphicon-minus-sign selectable"></span></a>
+                            {{ingredient.ingredient}} ( {{ingredient.quantity}} {{ingredient.unit}} )
+                        </li> 
+                    </ul>
+                </div>
 
             </div>
         </div>
