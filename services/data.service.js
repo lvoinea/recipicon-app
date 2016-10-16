@@ -15,7 +15,7 @@
             deleteRecipe: deleteRecipe,
             getIngredients : getIngredients,
             getShoppingList : getShoppingList,
-            updateShoppingListRecipe: updateShoppingListRecipe,
+            setShoppingList : setShoppingList,
             addShoppingListRecipe : addShoppingListRecipe,
             removeShoppingListRecipe : removeShoppingListRecipe
         };
@@ -74,8 +74,16 @@
             return $http.get($rootScope.service+'/ingredients')
         }
         
-        function getShoppingList(id){
-            return $http.get($rootScope.service+'/shopping-list/'+id);
+        function getShoppingList(shoppingList, id){
+            
+            var deferred;
+            
+            if (shoppingList == null){
+                deferred= $http.get($rootScope.service+'/shopping-list/'+id);                
+            } else {               
+                deferred = $q.when({data:shoppingList});                              
+            }            
+            return deferred;
         }
         
         function setShoppingList(shoppingList){

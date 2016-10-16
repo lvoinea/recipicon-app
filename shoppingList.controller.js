@@ -3,9 +3,9 @@
     
     angular.module('app').controller('ShoppingListController', ShoppingListController);
     
-    ShoppingListController.$inject = ['DataService', 'AlertService', '$log', '$stateParams'];
+    ShoppingListController.$inject = ['DataService', 'AlertService', '$log', '$state', '$stateParams'];
 
-    function ShoppingListController(DataService, AlertService, $log, $stateParams){
+    function ShoppingListController(DataService, AlertService, $log, $state, $stateParams){
         var vm = this;
         
         vm.localId = 0;
@@ -80,7 +80,7 @@
         
         function save(){
             vm.saving = true;
-            DataService.setRecipe(vm.shoppingList)
+            DataService.setShoppingList(vm.shoppingList)
                 .then(function(response){
                     $state.go('shopping-list',{'shoppingList' : response.data, 'id' : vm.shoppingList.id}); 
                 })
@@ -96,6 +96,8 @@
             $state.go('shopping-list',{'shoppingList' : vm.oldShoppingList,'id' : vm.oldShoppingList.id}); 
         }
         
-        function edit(){}
+        function edit(){
+            $state.go('shopping-list-edit',{'shoppingList' : vm.shoppingList, 'id' : vm.shoppingList.id});
+        }
     };
 })();
