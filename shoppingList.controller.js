@@ -19,6 +19,7 @@
         vm.addItem = addItem;
         vm.save = save;
         vm.edit = edit;
+        vm.create = create;
         vm.cancel = cancel;
         
         vm.loading = false;
@@ -98,6 +99,11 @@
         
         function edit(){
             $state.go('shopping-list-edit',{'shoppingList' : vm.shoppingList, 'id' : vm.shoppingList.id});
+        }
+        
+        function create(){
+            //TODO
+            //$state.go('shopping-list-edit',{'shoppingList' : vm.shoppingList, 'id' : vm.shoppingList.id});
         }
     };
 })();

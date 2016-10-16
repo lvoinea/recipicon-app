@@ -2,12 +2,12 @@
     <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading ...
 </div>
 <div ng-if="!vm.loading">
-    <h3>Recipe list</h3>
-
-    <button type="button" style='float:right; margin:5px;' ng-click="vm.edit()">
-        <small><span class="glyphicon glyphicon-plus"></span> Add recipe</small>
-    </button>
-       
+    <h3 class="text-center">Recipe list</h3>
+    <div class="text-center">
+        <button type="button" ng-click="vm.edit()">
+            Add recipe
+        </button>
+    </div>
     <div class="table-responsive">
         <table class="table table-striped" style='margin:5px;'>
             <colgroup>
@@ -55,8 +55,10 @@
                 </tr>
             </tbody>
         </table>
-    </div>    
-    <button type="button" style='float:right; margin:5px;' ng-click="vm.edit()">
-        <small><span class="glyphicon glyphicon-plus"></span> Add recipe</small>
-    </button>    
+    </div>
+    <div class="text-center">
+        <button type="button" style='float:right; margin:5px;' ng-click="vm.edit()">
+            Add recipe
+        </button>
+    </div>
 </div>
