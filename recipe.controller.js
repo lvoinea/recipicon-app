@@ -14,9 +14,7 @@
         vm.recipe = {};
         vm.oldRecipe = {};
         vm.recipeDescription = {};
-        vm.recipeInList = false;        
         vm.ingredients = [];
-        vm.alerts = [];
         
         vm.deleteIngredient = deleteIngredient;
         vm.addIngredient = addIngredient;
@@ -32,11 +30,6 @@
         vm.deleting = false; 
         vm.selecting = false;
 
-        //todo: add receipe to current shopping list (create one if not available, and register it in user profile)
-        //todo: get wheter recipe is in shopping list
-        //todo: uppon save update the recipe description
-        //todo: get ingredient list upon loading
-        
         loadRecipe($stateParams.recipe, $stateParams.id);            
         
         function loadRecipe(recipe,id) {            
@@ -92,9 +85,6 @@
         }
         
         function save(){
-            
-            //todo: validate the fields
-            
             vm.saving = true;
             DataService.setRecipe(vm.recipe)
                 .then(function(response){
@@ -113,8 +103,7 @@
                 $state.go('recipe',{'recipe' : vm.oldRecipe, 'id' : vm.oldRecipe.id});
             } else {
                 $state.go('recipes');
-            }
-            
+            }            
         }
         
         function edit(){

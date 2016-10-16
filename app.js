@@ -77,6 +77,9 @@
             
             .state('shopping-list', {
                 url: '/shopping-list/:id',
+                params: {
+                    shoppingList: null,
+                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
@@ -89,6 +92,28 @@
                     "r-body": {
                         controller: 'ShoppingListController',
                         templateUrl: 'shoppingList.view.html',
+                        controllerAs: 'vm'
+                    }
+                }               
+            })
+            
+            .state('shopping-list-edit', {
+                url: '/shopping-list-edit/:id',
+                params: {
+                    shoppingList: null,
+                },
+                views : {
+                    "r-header": {
+                        templateUrl: "header.html",
+                        params: {
+                            selection: 'shopping-list'
+                        },
+                        controller: 'HeaderController',
+                        controllerAs: 'vm'
+                    },
+                    "r-body": {
+                        controller: 'ShoppingListController',
+                        templateUrl: 'shoppingList.edit.view.html',
                         controllerAs: 'vm'
                     }
                 }               

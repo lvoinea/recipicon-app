@@ -78,31 +78,8 @@
             return $http.get($rootScope.service+'/shopping-list/'+id);
         }
         
-        function updateShoppingListRecipe(recipe) {
-            
-            return $http({
-                    method: 'POST',
-                    url: '/setShoppingListItem.php',
-                    data: {id: recipe.id, category: 1, amount: recipe.serves, add: recipe.inShoppingList},
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-                })
-                .then(updateComplete,updateFailed)
-                
-            function updateComplete(response){
-                $log.info(response);
-                return response;
-            }
-            
-            function updateFailed(error){
-                $log.error('XHR Failed updateShoppingListRecipe.');
-                return $q.reject(error);
-            }
-            //id: this.id(),
-            //category: 1, // recipe
-            //amount: this.serves(),
-            //add: newValue}),
-            
-            //url: "/setShoppingListItem.php",
+        function setShoppingList(shoppingList){
+            return $http.post($rootScope.service+'/shopping-list/'+shoppingList.id, shoppingList);
         }
         
         function addShoppingListRecipe(id){
