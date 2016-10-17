@@ -1,17 +1,17 @@
-<div id='top' class="panel panel-default row">
-    <div class="panel-heading col-xs-12">
-        <div class="col-xs-3"> 
-            <a ui-sref="recipes">Recipes</a>
-        </div>
-        <div class="col-xs-4 text-center"> 
-            <a ui-sref="shopping-list({id:'_'})">Shopping list</a>
-        </div>
-        <div class="col-xs-3 text-center">            
-            <a ui-sref="shopping-list({id:'_'})">Statistics</a>
-        </div>
-        <div class="col-xs-2 text-right">  
-            <a ui-sref="logout"><span class="glyphicon glyphicon-off"></span></a>           
-        </div>
+<div id='top' class="panel panel-info row">
+    <div class="btn-group btn-group-justified panel-heading nopadding" role="group" aria-label="...">
+      <a type="button" class="btn" role="button" ui-sref="recipes">
+       <span class="glyphicon glyphicon-list"></span>
+      </a>
+      <a type="button" class="btn" role="button" ui-sref="shopping-list({id:'_'})">
+       <span class="glyphicon glyphicon-shopping-cart"></span>
+      </a>
+      <a type="button" class="btn" role="button" ui-sref="shopping-list({id:'_'})">
+       <span class="glyphicon glyphicon-stats"></span>
+      </a>
+      <a type="button" class="btn" role="button" ui-sref="logout">
+        <span class="glyphicon glyphicon-off"></span>
+      </a>
     </div>
- </div>
+</div>
 <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="vm.clearAlert($index)">{{alert.msg}}</div>
