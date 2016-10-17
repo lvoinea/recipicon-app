@@ -33,7 +33,7 @@
         loadRecipe($stateParams.recipe, $stateParams.id);            
         
         function loadRecipe(recipe,id) {            
-            $log.info('loading recipe ('+ id + ',' + recipe + ')');            
+            //$log.info('loading recipe ('+ id + ',' + recipe + ')');            
             vm.loading = true;
             
             DataService.getRecipe(recipe,id)
@@ -69,7 +69,7 @@
                 var matches = vm.quantity.match(vm.regex);
                 var amount = matches[1].replace(",", ".");
                 var unit = matches[2];
-                vm.recipe.recipe_ingredients.splice(0,0,
+                vm.recipe.recipe_ingredients.push(
                 // new recipe ingredient 
                 {
                     'id': '_'+ vm.localId,

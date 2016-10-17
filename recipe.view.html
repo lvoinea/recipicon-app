@@ -4,35 +4,34 @@
 <div ng-if="!vm.loading">
     <h3 class="text-center">
         {{vm.recipe.name}} </br>
-        <small ng-if="vm.recipe.in_shopping_list">(in shopping list)</small>
+        <small ng-if="vm.recipe.in_shopping_list">( in shopping list )</small>
     </h3>
-    <div class="row">
-        <div class="panel col-xs-5">        
-            <button type="button" ng-if="!vm.recipe.in_shopping_list" ng-click="vm.addToBasket()">
-                Select
-                <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.selecting"></span>
-            </button> 
-            <button type="button" ng-if="vm.recipe.in_shopping_list" ng-click="vm.removeFromBasket()">
-                Deselect
-                <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.selecting"></span>
-            </button>   
-        </div>
-        <div class="panel col-xs-7 text-right">
-            <button type="button" ng-click="vm.edit()">
-                Edit
-            </button>
-            <button type="button"  ng-click="vm.remove()">
-                Delete
-                <span class="glyphicon glyphicon-trash" ng-if="!vm.deleting"></span>
-                <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.deleting"></span>
-            </button>
-        </div>
+    
+    <div class="panel">
+    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+        <a type="button" class="btn btn-primary" ng-if="!vm.recipe.in_shopping_list" ng-click="vm.addToBasket()">
+            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.selecting"></span>
+            Add to <span class="glyphicon glyphicon-shopping-cart"></span>                
+        </a> 
+        <a type="button" class="btn btn-primary" ng-if="vm.recipe.in_shopping_list" ng-click="vm.removeFromBasket()">
+            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.selecting"></span>
+           Out of <span class="glyphicon glyphicon-shopping-cart"></span>                
+        </a>
+        <a type="button" class="btn btn-primary" ng-click="vm.edit()">
+            Edit
+        </a>
+        <a type="button" class="btn btn-primary" ng-click="vm.remove()">
+            Delete
+            <span class="glyphicon glyphicon-trash" ng-if="!vm.deleting"></span>
+            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.deleting"></span>
+        </a>
+    </div>
     </div>
 
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
-                Description ({{vm.recipe.category}} | {{vm.recipe.duration}} min.)
+                Description ( {{vm.recipe.category}} | {{vm.recipe.duration}} min.)
             </h3>
         </div>
         <div class="panel-body">            
@@ -43,7 +42,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
-                List of ingredients <i>({{vm.recipe.serves}} serves)</i>
+                List of ingredients ( {{vm.recipe.serves}} serves )
             </h3>
         </div>
         <div class="panel-body">
