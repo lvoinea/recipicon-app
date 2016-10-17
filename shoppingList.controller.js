@@ -24,6 +24,7 @@
         
         vm.loading = false;
         vm.saving = false;
+        vm.creating = false;
 
         loadShoppingList($stateParams.shoppingList, $stateParams.id)
        
@@ -63,7 +64,7 @@
                 var matches = vm.quantity.match(vm.regex);
                 var amount = matches[1].replace(",", ".");
                 var unit = matches[2];
-                vm.shoppingList.items.splice(0,0,
+                vm.shoppingList.items.push(
                 // new shopping list ingredient 
                 {
                     'id': '_'+ vm.localId,
@@ -102,8 +103,18 @@
         }
         
         function create(){
-            //TODO
-            //$state.go('shopping-list-edit',{'shoppingList' : vm.shoppingList, 'id' : vm.shoppingList.id});
+            vm.creating = true;
+            var shoppingList = {'id':'_','items':[]}
+            DataService.setShoppingList(shoppingList)
+                .then(function(response){
+                    $state.go('shopping-list',{'shoppingList' : response.data, 'id' : '_'}); 
+                })
+                .catch(function(error){
+                    AlertService.setAlert('ERROR: Could not create new shopping list (code ' + error.status + ').');
+                })
+                .finally(function(){
+                    vm.creating = false;
+                });            
         }
     };
 })();

@@ -69,7 +69,7 @@
                 var matches = vm.quantity.match(vm.regex);
                 var amount = matches[1].replace(",", ".");
                 var unit = matches[2];
-                vm.recipe.recipe_ingredients.splice(0,0,
+                vm.recipe.recipe_ingredients.push(
                 // new recipe ingredient 
                 {
                     'id': '_'+ vm.localId,

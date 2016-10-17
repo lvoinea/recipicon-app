@@ -6,19 +6,17 @@
         Shopping list {{vm.shoppingList.name}} </br>
         <small>{{vm.shoppingList.date}}</small>
     </h3>
-    <div class="row">
-        <div class="panel col-xs-6">        
-            <button type="button" ng-click="vm.organize()">
+     <div class="panel">
+        <div class="btn-group btn-group-justified" role="group" aria-label="...">
+            <a type="button" class="btn btn-primary" ng-click="vm.organize()">
                 Organize
-            </button>
-        </div>
-        <div class="panel col-xs-6 text-right">            
-            <button type="button"  ng-click="vm.edit()">
+            </a>                
+            <a type="button" class="btn btn-primary" ng-click="vm.edit()">
                 Edit
-            </button>
-            <button type="button"  ng-click="vm.create()">
-                New
-            </button>
+            </a>
+            <a type="button" class="btn btn-primary" ng-click="vm.create()">
+                New <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.creating"></span>
+            </a>
         </div>
     </div>
     <form name="shoppingList" novalidate>
@@ -31,7 +29,7 @@
             </div>
             <div class="panel-body">
                 <ul>
-                    <li class="col-xs-12" ng-repeat="item in vm.shoppingList.items | filter:{ingredient:null}">
+                    <li ng-repeat="item in vm.shoppingList.items | filter:{ingredient:null}">
                        <a ui-sref="recipe({id:item.recipe.id})">
                        {{item.recipe.name}}
                        </a>
@@ -47,14 +45,12 @@
                    Ingredients
                 </h3>
             </div>
-            <div class="panel-body">        
-                <div class="col-xs-12">
+            <div class="panel-body">               
                 <ul>
                     <li ng-repeat="item in vm.shoppingList.items | filter:{recipe:null}">
                         {{item.ingredient}} ( {{item.quantity}} {{item.unit}} )                   
                     </li>
-                </ul>
-                </div>
+                </ul>                
             </div>
         </div>        
     </form>
