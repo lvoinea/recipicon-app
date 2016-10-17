@@ -42,8 +42,7 @@
                    Extra ingredients
                 </h3>
             </div>
-            <div class="panel-body">            
-                
+            <div class="panel-body">                
                 <ul>
                     <li ng-repeat="item in vm.shoppingList.items | filter:{recipe:null}">
                          <a ng-click="vm.deleteItem(item.id)">
@@ -51,9 +50,7 @@
                         {{item.ingredient}} ( {{item.quantity}} {{item.unit}} )
                    
                     </li>
-                </ul>
-                
-            
+                </ul>            
                 <div class="col-xs-12">
                     <div class="input-group">
                     <input name="iname"  class="form-control input-sm" autocomplete="off" id='ingredient'  type="text" placeholder="Name" ng-model="vm.ingredient" uib-typeahead="ingredient for ingredient in vm.ingredients | filter:$viewValue | limitTo:8" required>
@@ -63,8 +60,7 @@
                             <button type="button" class="btn btn-sm btn-success" ng-click="vm.addItem('ingredient')" ng-disabled="shoppingList.quantity.$invalid || shoppingList.quantity.$pristine || shoppingList.iname.$invalid">Add</button>
                         </div>
                     </div>                    
-                </div>              
-
+                </div>
             </div>
         </div>
         

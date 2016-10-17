@@ -47,8 +47,8 @@
             </div>
             <div class="panel-body">               
                 <ul>
-                    <li ng-repeat="item in vm.shoppingList.items | filter:{recipe:null}">
-                        {{item.ingredient}} ( {{item.quantity}} {{item.unit}} )                   
+                    <li ng-repeat="item in vm.itemList">
+                        {{item.ingredient}} ( {{item.quantity}} )                   
                     </li>
                 </ul>                
             </div>

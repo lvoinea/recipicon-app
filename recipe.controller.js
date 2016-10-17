@@ -33,7 +33,7 @@
         loadRecipe($stateParams.recipe, $stateParams.id);            
         
         function loadRecipe(recipe,id) {            
-            $log.info('loading recipe ('+ id + ',' + recipe + ')');            
+            //$log.info('loading recipe ('+ id + ',' + recipe + ')');            
             vm.loading = true;
             
             DataService.getRecipe(recipe,id)

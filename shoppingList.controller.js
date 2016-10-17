@@ -14,6 +14,8 @@
         vm.shoppingList = {};
         vm.oldShoppingList = {};
         vm.ingredients = [];
+        vm.items = {};
+        vm.itemList = [];
         
         vm.deleteItem = deleteItem;
         vm.addItem = addItem;
@@ -29,13 +31,14 @@
         loadShoppingList($stateParams.shoppingList, $stateParams.id)
        
         function loadShoppingList(shoppingList,id){
-            $log.info('loading shopping list ('+ id + ',' + shoppingList + ')');     
+            //$log.info('loading shopping list ('+ id + ',' + shoppingList + ')');     
             vm.loading = true;
             
             DataService.getShoppingList(shoppingList,id)
             .then(function(response){
                 vm.shoppingList = response.data;
                 vm.oldShoppingList = JSON.parse(JSON.stringify(vm.shoppingList));
+                getItems(vm.shoppingList.items);
                 return DataService.getIngredients();
             })
             .then(function(ingredients){
@@ -47,6 +50,47 @@
             .finally(function(){
                  vm.loading = false;
             });
+        }
+        
+        function getItems(items){
+            vm.items = {};
+            vm.itemList = [];
+            //-- group ingredients
+            _.forEach(items, function(item) {
+              if (item.ingredient != null){
+                  processItem(item, 1);
+              } else if (item.recipe != null){
+                  _.forEach(item.recipe.recipe_ingredients, function(ingredient) {
+                      processItem(ingredient, item.quantity*1.0/ item.recipe.serves);
+                  });
+              }
+            });
+            //-- aggregate quantities
+            var quantity;
+            _.forEach(_.keys(vm.items), function(ingredient) {
+                quantity = '';
+                _.forEach(_.keys(vm.items[ingredient]), function(unit) {
+                    vm.items[ingredient][unit] = vm.items[ingredient][unit].reduce((a, b) => a + b, 0);                    
+                    quantity = quantity + vm.items[ingredient][unit] + ' ' + unit + ' + ';
+                 }); 
+                 quantity = quantity.substring(0, quantity.length - 3);
+                 vm.itemList.push({'ingredient':ingredient, 'quantity':quantity});
+            });  
+            //$log.info(vm.items);
+        }
+        
+        function processItem(item, factor){
+            var ingredient = item.ingredient;
+            var unit = item.unit;
+            var quantity = item.quantity * factor;
+            
+            if (!_.has(vm.items,ingredient)){
+              vm.items[ingredient] = {}                      
+            }
+            if (!_.has(vm.items[ingredient],unit)){
+              vm.items[ingredient][unit] = []
+            }
+            vm.items[ingredient][unit].push(quantity);
         }
 
         function deleteItem(id){
