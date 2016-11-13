@@ -13,11 +13,12 @@
             getRecipe: getRecipe,            
             setRecipe: setRecipe,
             deleteRecipe: deleteRecipe,
-            getIngredients : getIngredients,
+            getUserIngredients : getUserIngredients,
+            getIngredientLocations : getIngredientLocations,
             getShoppingList : getShoppingList,
             setShoppingList : setShoppingList,
             addShoppingListRecipe : addShoppingListRecipe,
-            removeShoppingListRecipe : removeShoppingListRecipe
+            removeShoppingListRecipe : removeShoppingListRecipe            
         };
         
         function Recipe(){
@@ -67,11 +68,15 @@
             return $http.delete($rootScope.service+'/recipe/'+id);            
         }
         
-        function getIngredients(){
+        function getUserIngredients(){
             //var deferred = $q.defer();
             //deferred.resolve(['marar','drojdie','apa','fasole']);
             //return deferred.promise;
             return $http.get($rootScope.service+'/ingredients')
+        }
+        
+        function getIngredientLocations(ingredientIds){
+            return $http.get($rootScope.service+'/ingredients/location/'+ingredientIds.join(','))
         }
         
         function getShoppingList(shoppingList, id){

@@ -41,7 +41,7 @@
                 vm.recipe = response.data;                
                 vm.recipeDescription = vm.recipe.description.split('\n');
                 vm.oldRecipe = JSON.parse(JSON.stringify(vm.recipe));
-                return DataService.getIngredients();
+                return DataService.getUserIngredients();
             })
             .then(function(ingredients){
                 vm.ingredients = ingredients.data.map(function(item){return item.name});               

@@ -118,6 +118,28 @@
                     }
                 }               
             })
+            
+            .state('shopping-list-organize', {
+                url: '/shopping-list-organize',
+                params: {
+                    ingredients: null,
+                },
+                views : {
+                    "r-header": {
+                        templateUrl: "header.html",
+                        params: {
+                            selection: 'shopping-list'
+                        },
+                        controller: 'HeaderController',
+                        controllerAs: 'vm'
+                    },
+                    "r-body": {
+                        controller: 'OrganizeController',
+                        templateUrl: 'shoppingList.organize.view.html',
+                        controllerAs: 'vm'
+                    }
+                }               
+            })
 
             .state('login', {
                 url: '/login',

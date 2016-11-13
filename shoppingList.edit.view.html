@@ -53,7 +53,7 @@
                 </ul>            
                 <div class="col-xs-12">
                     <div class="input-group">
-                    <input name="iname"  class="form-control input-sm" autocomplete="off" id='ingredient'  type="text" placeholder="Name" ng-model="vm.ingredient" uib-typeahead="ingredient for ingredient in vm.ingredients | filter:$viewValue | limitTo:8" required>
+                    <input name="iname"  class="form-control input-sm" autocomplete="off" id='ingredient'  type="text" placeholder="Name" ng-model="vm.ingredient" uib-typeahead="ingredient for ingredient in vm.userIngredients | filter:$viewValue | limitTo:8" required>
                     <span class="input-group-btn" style="width:0px;"></span>
                     <input name="quantity" class="form-control input-sm" type="text" placeholder="Quantity" ng-model="vm.quantity" ng-enter="vm.addItem('ingredient')" ng-pattern="vm.regex" uib-popover="Format: 'quantity unit'">
                         <div class="input-group-btn">
