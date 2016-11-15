@@ -16,13 +16,14 @@
         vm.userIngredients = [];
         vm.listItems = {};
         vm.listIngredients = [];        
-        vm.selectedShop = 'Lidl';
-        vm.shops = [];
+        vm.selectedShopId = 1;
+        vm.shops = {};
         vm.ingredentLocations = {};
         
         vm.deleteItem = deleteItem;
         vm.addItem = addItem;
         vm.setShop = setShop;
+        vm.getShops = getShops;
         
         vm.edit = edit;
         vm.organize = organize;
@@ -49,7 +50,23 @@
                 return DataService.getIngredientLocations(_.keys(vm.listItems));
             })
             .then(function(locations){
-                vm.ingredentLocations = locations.data;
+                var ingredients = locations.data;
+                vm.ingredentLocations = {}
+                vm.shops={}
+                _.forEach(ingredients, function(ingredient) {
+                    if (!_.has(vm.ingredentLocations,ingredient.id)){
+                        vm.ingredentLocations[ingredient.id] = {};
+                    }
+                    _.forEach(ingredient.locations, function(loc){
+                        vm.ingredentLocations[ingredient.id][loc.shop.id] = loc.id;
+                        if (!_.has(vm.shops,loc.shop.id)){
+                            vm.shops[loc.shop.id] = loc.shop;
+                            vm.shops[loc.shop.id].locations = [];
+                        }
+                        vm.shops[loc.shop.id].locations.push({'id':loc.id, 'name':loc.location});
+                        
+                    });
+                });
                 //TODO: convert location.data to hasmaps: getLocations()
                 // hm<shop,[locations]>
                 // hm<id,hm<shop,location>> + isAtLocation (id, shop)
@@ -65,6 +82,11 @@
             .finally(function(){
                  vm.loading = false;
             });
+        }
+        
+        function getShops(){
+            //return _.map(_.values(vm.shops),'name');
+            return _.values(vm.shops);
         }
         
         function getListItems(items){
@@ -184,7 +206,7 @@
         }
         
         function setShop(){
-            $log.info(vm.selectedShop);
+            $log.info(vm.selectedShopId);
             //TODO: get ingredient location for the shop
             //TODO: group ingredients on location
         }

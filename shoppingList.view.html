@@ -43,23 +43,52 @@
             <div class="panel-heading">
                 <h3 class="panel-title">
                    Ingredients 
-                   <span ng-if="vm.shops.length > 0">
+                   <span ng-if="vm.getShops().length > 0">
                        @ 
-                       <select ng-model="vm.selectedShop"                           
-                                ng-options="shop for shop in vm.shops" 
+                       <select ng-model="vm.selectedShopId"                           
+                                ng-options="shop.id as shop.name for shop in vm.getShops()" 
                                 ng-change="vm.setShop()"
                                 >                      
                         </select>
                     </span>                    
                 </h3>
             </div>
-            <div class="panel-body">               
-                <ul>
-                    <li ng-repeat="item in vm.listIngredients">
-                        {{item.name}} ( {{item.quantity}} )                   
-                    </li>
-                </ul>                
-            </div>
+            <div class="panel-body">        
+
+              <table class="table table-striped" ng-repeat="location in vm.shops[vm.selectedShopId].locations">
+                <tbody>
+                  <tr>
+                    <td>{{location.name}}</td>        
+                  </tr>
+                  <tr>
+                    <td>
+                        <ul>
+                            <li ng-repeat="item in vm.listIngredients" ng-if="vm.ingredentLocations[item.id][vm.selectedShopId] == location.id">
+                                {{item.name}} ( {{item.quantity}} )                   
+                            </li>
+                       </ul> 
+                    </td>        
+                  </tr>
+                </tbody>
+              </table>
+              
+               <table class="table table-striped">
+                <tbody>
+                  <tr>
+                    <td>Unsorted</td>        
+                  </tr>
+                  <tr>
+                    <td>
+                        <ul>
+                            <li ng-repeat="item in vm.listIngredients" ng-if="!vm.ingredentLocations[item.id][vm.selectedShopId]">
+                                {{item.name}} ( {{item.quantity}} )                   
+                            </li>
+                       </ul> 
+                    </td>        
+                  </tr>
+                </tbody>
+              </table>                    
+            
         </div>        
     </form>
     
