@@ -31,9 +31,6 @@
             
             .state('recipe', {
                 url: '/recipe/:id',
-                params: {
-                    recipe: null,
-                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
@@ -54,9 +51,6 @@
             
             .state('recipe-edit', {
                 url: '/recipe-edit/:id',
-                params: {
-                    recipe: null,
-                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
@@ -192,6 +186,9 @@
         
         //Configure service path
         $rootScope.service = '/api';
+        $rootScope.recipes = null;
+        $rootScope.recipe = null;
+        $rootScope.ingredients = null;
         
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};

@@ -13,7 +13,10 @@
             getRecipe: getRecipe,            
             setRecipe: setRecipe,
             deleteRecipe: deleteRecipe,
-            getUserIngredients : getUserIngredients,
+            getIngredients : getIngredients,
+            setIngredient : setIngredient,
+            getShops : getShops,
+            getLocations : getLocations,
             getIngredientLocations : getIngredientLocations,
             getShoppingList : getShoppingList,
             setShoppingList : setShoppingList,
@@ -21,6 +24,7 @@
             removeShoppingListRecipe : removeShoppingListRecipe            
         };
         
+        //---------------------------------------------- Recipe
         function Recipe(){
             return {
                 'id' : '_',
@@ -34,51 +38,107 @@
             }
         }
         
-        function ShoppingListCommand(cmd){
-            return {
-                'action' : cmd
-            }
-        }        
-
-
         function getRecipes() {
-            return $http.get($rootScope.service+'/recipes');               
+            var deferred;
+            
+            if ($rootScope.recipes == null) {
+                deferred = $http.get($rootScope.service+'/recipes')
+                .then(function(response) {
+                    $rootScope.recipes = {};
+                    _.forEach(response.data, function(recipe){
+                        $rootScope.recipes[recipe.id] = recipe
+                    });
+                    return $rootScope.recipes;
+                });             
+            } else {                
+                deferred = $q.when($rootScope.recipes);                              
+            }            
+            return deferred;              
         }        
        
-        function getRecipe(recipe,id) {
+        function getRecipe(id) {           
+            var deferred;
            
-           var deferred;
-            
-            if ((recipe == null) & (id != '')){
-                deferred= $http.get($rootScope.service+'/recipe/'+id);                
-            } else { 
-                if ((recipe == null) & (id == '')){
-                    recipe = Recipe();
-                }
-                deferred = $q.when({data:recipe});                              
+            if (!id) {
+                $rootScope.recipe = Recipe();
+                deferred = $q.when($rootScope.recipe);
+            }
+            else if (($rootScope.recipe == null) || ($rootScope.recipe.id != id)) {
+                deferred= $http
+                    .get($rootScope.service+'/recipe/'+id)
+                    .then(function(response){
+                        $rootScope.recipe = response.data;
+                        return $rootScope.recipe;
+                    });                
+            }
+            else {               
+                deferred = $q.when($rootScope.recipe);       
             }            
+          
             return deferred;
         }
         
         function setRecipe(recipe) {                            
-            return $http.post($rootScope.service+'/recipe/'+recipe.id, recipe)                
+            return $http.post($rootScope.service+'/recipe/'+recipe.id, recipe)
+            .then(function(response){
+                $rootScope.recipe = response.data;
+                if (recipe.id == "_"){
+                    $rootScope.recipes[$rootScope.recipe.id] = $rootScope.recipe;
+                }                
+                return $rootScope.recipe;
+            });                            
         }
         
         function deleteRecipe(id){
-            return $http.delete($rootScope.service+'/recipe/'+id);            
+            return $http.delete($rootScope.service+'/recipe/'+id)
+            .then(function(response) {
+                if (_.has($rootScope.recipes, id)){
+                    delete $rootScope.recipes[id];
+                }                
+            });            
         }
         
-        function getUserIngredients(){
-            //var deferred = $q.defer();
-            //deferred.resolve(['marar','drojdie','apa','fasole']);
-            //return deferred.promise;
-            return $http.get($rootScope.service+'/ingredients')
+        //----------------------------------------------  Ingredient
+        function getIngredients(){
+            var deferred;
+            
+            if ($rootScope.ingredients == null) {
+                deferred = $http.get($rootScope.service+'/ingredients')
+                .then(function(response) {
+                    $rootScope.ingredients = {};
+                    _.forEach(response.data, function(ingredient){
+                        $rootScope.ingredients[ingredient.id] = ingredient;
+                    });
+                    return $rootScope.ingredients;
+                });     
+            } else {                
+                deferred = $q.when($rootScope.ingredients);                              
+            }            
+            return deferred; 
+        }
+        
+        function setIngredient(ingredient){
+            return $http.post($rootScope.service+'/ingredient/'+ingredient.id, ingredient)
+            .then(function(response) {
+                return response.data;
+            });
+        }
+        
+         //---------------------------------------------- Shop
+        function getShops(){
+            return $http.get($rootScope.service+'/shops')
+        }
+        
+         //---------------------------------------------- Location
+        function getLocations(){
+            return $http.get($rootScope.service+'/locations')
         }
         
         function getIngredientLocations(ingredientIds){
             return $http.get($rootScope.service+'/ingredients/location/'+ingredientIds.join(','))
         }
         
+         //---------------------------------------------- Shoppig list
         function getShoppingList(shoppingList, id){
             
             var deferred;
@@ -95,12 +155,30 @@
             return $http.post($rootScope.service+'/shopping-list/'+shoppingList.id, shoppingList);
         }
         
+        function ShoppingListCommand(cmd){
+            return {
+                'action' : cmd
+            }
+        }
+        
         function addShoppingListRecipe(id){
-            return $http.post($rootScope.service+'/shopping-list/_/recipe/'+id, ShoppingListCommand('add'));
+            return $http.post($rootScope.service+'/shopping-list/_/recipe/'+id, ShoppingListCommand('add'))
+            .then(function(response) {
+                $rootScope.recipes[id].in_shopping_list = true;
+                if (($rootScope.recipe) && ($rootScope.recipe.id == id)){
+                    $rootScope.recipe.in_shopping_list = true;
+                }
+            });
         }
         
         function removeShoppingListRecipe(id){
-             return $http.post($rootScope.service+'/shopping-list/_/recipe/'+id, ShoppingListCommand('remove'));
+            return $http.post($rootScope.service+'/shopping-list/_/recipe/'+id, ShoppingListCommand('remove'))
+            .then(function(response) {
+                $rootScope.recipes[id].in_shopping_list = false;
+                 if (($rootScope.recipe) && ($rootScope.recipe.id == id)){
+                    $rootScope.recipe.in_shopping_list = false;
+                }
+            });
         }
         
     }

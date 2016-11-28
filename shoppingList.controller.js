@@ -13,17 +13,19 @@
         
         vm.shoppingList = {};
         vm.shoppingListOld = {};
-        vm.userIngredients = [];
-        vm.listItems = {};
+        vm.ingredients = [];
+        vm.mapIngredients = {};
         vm.listIngredients = [];        
         vm.selectedShopId = 1;
         vm.shops = {};
+        vm.locations = {};
         vm.ingredentLocations = {};
         
         vm.deleteItem = deleteItem;
         vm.addItem = addItem;
         vm.setShop = setShop;
         vm.getShops = getShops;
+        vm.ingredientHasLocation = ingredientHasLocation;
         
         vm.edit = edit;
         vm.organize = organize;
@@ -36,9 +38,9 @@
         vm.saving = false;
         vm.creating = false;
 
-        loadShoppingList($stateParams.shoppingList, $stateParams.id)
+        _loadData($stateParams.shoppingList, $stateParams.id)
        
-        function loadShoppingList(shoppingList,id){
+        function _loadData(shoppingList,id){
             //$log.info('loading shopping list ('+ id + ',' + shoppingList + ')');     
             vm.loading = true;
             
@@ -46,42 +48,59 @@
             .then(function(response){
                 vm.shoppingList = response.data;
                 vm.shoppingListOld = JSON.parse(JSON.stringify(vm.shoppingList));
-                getListItems(vm.shoppingList.items);
-                return DataService.getIngredientLocations(_.keys(vm.listItems));
+                
+                vm.mapIngredients = _getMapIngredients(vm.shoppingList.items);
+                vm.listIngredients = _getListIngredients(vm.mapIngredients);
+                
+                return DataService.getIngredientLocations(_.keys(vm.mapIngredients));
+            })
+            .then(function(ingredientLocations){
+                vm.ingredentLocations = {}
+                _.forEach(ingredientLocations.data, function(ingredient) {                   
+                    vm.ingredentLocations[ingredient.id] = ingredient.locations;
+                });                
+                return DataService.getShops();
+            })
+            .then(function(shops){
+                _.forEach(shops.data, function(shop) {
+                     if (!_.has(vm.shops,shop.id)){
+                        vm.shops[shop.id] = {};
+                        vm.shops[shop.id].id = shop.id;
+                        vm.shops[shop.id].name = shop.name;
+                        vm.shops[shop.id].locations = [];
+                     }
+                })                
+                return DataService.getLocations();
             })
             .then(function(locations){
-                var ingredients = locations.data;
-                vm.ingredentLocations = {}
-                vm.shops={}
-                _.forEach(ingredients, function(ingredient) {
-                    if (!_.has(vm.ingredentLocations,ingredient.id)){
-                        vm.ingredentLocations[ingredient.id] = {};
-                    }
-                    _.forEach(ingredient.locations, function(loc){
-                        vm.ingredentLocations[ingredient.id][loc.shop.id] = loc.id;
-                        if (!_.has(vm.shops,loc.shop.id)){
-                            vm.shops[loc.shop.id] = loc.shop;
-                            vm.shops[loc.shop.id].locations = [];
-                        }
-                        vm.shops[loc.shop.id].locations.push({'id':loc.id, 'name':loc.location});
-                        
-                    });
-                });
-                //TODO: convert location.data to hasmaps: getLocations()
-                // hm<shop,[locations]>
-                // hm<id,hm<shop,location>> + isAtLocation (id, shop)
-                return DataService.getUserIngredients();
+                _.forEach(locations.data, function(loc) {
+                     if (!_.has(vm.locations,loc.id)){
+                        vm.locations[loc.id] = {};  
+                        vm.locations[loc.id].name = loc.name ;
+                        vm.locations[loc.id].shop = loc.shop ;
+                        vm.shops[loc.shop].locations.push(loc.id)                        
+                     }
+                })
+                return DataService.getIngredients();
             })
             .then(function(ingredients){
-                vm.userIngredients = ingredients.data.map(function(item){return item.name});               
+                vm.ingredients = ingredients.data.map(function(item){return item.name});               
             })            
             //TODO: get current shop
             .catch(function(error){
-                AlertService.setAlert('ERROR: Could not load shopping llist (code  ' + error.status + ').');
+                AlertService.setAlert('ERROR: Could not load shopping list data (code  ' + error.status + ').');
             })
             .finally(function(){
                  vm.loading = false;
             });
+        }
+        
+        function ingredientHasLocation(ingredientId, shopId){
+            var hasLocation = false;
+            _.forEach(vm.ingredentLocations[ingredientId], function(locationId) {
+                hasLocation = hasLocation || (vm.locations[locationId].shop == shopId);
+            })
+            return hasLocation;
         }
         
         function getShops(){
@@ -89,10 +108,31 @@
             return _.values(vm.shops);
         }
         
-        function getListItems(items){
-            vm.listItems = {};
-            vm.listIngredients = [];
-            //-- group ingredients
+        function setShop(){
+            $log.info(vm.selectedShopId);
+            //TODO: get ingredient location for the shop
+            //TODO: group ingredients on location
+        }
+        
+        //Group unique ingredients among the items of a shopping list
+        function _getMapIngredients(items){
+            var mapIngredients = {};            
+            
+            function processItem(item, factor){
+                var ingredient = item.ingredient;
+                var unit = item.unit;
+                var quantity = item.quantity * factor;
+                
+                if (!_.has(mapIngredients,ingredient.id)){
+                  mapIngredients[ingredient.id] = {'name':ingredient.name}   
+                          
+                }
+                if (!_.has(mapIngredients[ingredient.id],unit)){
+                  mapIngredients[ingredient.id][unit] = []
+                }
+                mapIngredients[ingredient.id][unit].push(quantity);
+            }
+            
             _.forEach(items, function(item) {
               if (item.ingredient != null){
                   processItem(item, 1);
@@ -102,36 +142,29 @@
                   });
               }
             });
-            //-- aggregate quantities
+            
+            return mapIngredients;            
+        }       
+        
+        // Aggregate the ingredients in a shopping list
+        function _getListIngredients(mapIngredients){
+            var listIngredients = [];          
             var quantity;
-            _.forEach(_.keys(vm.listItems), function(ingredientId) {
+            _.forEach(_.keys(mapIngredients), function(ingredientId) {
                 quantity = '';
-                _.forEach(_.keys(vm.listItems[ingredientId]), function(unit) {
+                _.forEach(_.keys(mapIngredients[ingredientId]), function(unit) {
                     if (unit != 'name'){
-                        vm.listItems[ingredientId][unit] = vm.listItems[ingredientId][unit].reduce((a, b) => a + b, 0);                    
-                        quantity = quantity + vm.listItems[ingredientId][unit] + ' ' + unit + ' + ';
+                        mapIngredients[ingredientId][unit] = mapIngredients[ingredientId][unit].reduce((a, b) => a + b, 0);                    
+                        quantity = quantity + mapIngredients[ingredientId][unit] + ' ' + unit + ' + ';
                     }
                  }); 
                  quantity = quantity.substring(0, quantity.length - 3);
-                 vm.listIngredients.push({'id':ingredientId, 'name':vm.listItems[ingredientId].name, 'quantity':quantity});
-            });  
-            //$log.info(vm.listItems);
+                 listIngredients.push({'id':ingredientId, 'name':mapIngredients[ingredientId].name, 'quantity':quantity});
+            });
+            return listIngredients;
         }
         
-        function processItem(item, factor){
-            var ingredient = item.ingredient;
-            var unit = item.unit;
-            var quantity = item.quantity * factor;
-            
-            if (!_.has(vm.listItems,ingredient.id)){
-              vm.listItems[ingredient.id] = {'name':ingredient.name}   
-                      
-            }
-            if (!_.has(vm.listItems[ingredient.id],unit)){
-              vm.listItems[ingredient.id][unit] = []
-            }
-            vm.listItems[ingredient.id][unit].push(quantity);
-        }
+        
 
         function deleteItem(id){
             for( var i = 0; i< vm.shoppingList.items.length; i++){
@@ -205,10 +238,6 @@
                 });            
         }
         
-        function setShop(){
-            $log.info(vm.selectedShopId);
-            //TODO: get ingredient location for the shop
-            //TODO: group ingredients on location
-        }
+        
     };
 })();

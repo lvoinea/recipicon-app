@@ -37,7 +37,7 @@
                 vm.shoppingList = response.data;
                 vm.oldShoppingList = JSON.parse(JSON.stringify(vm.shoppingList));
                 getItems(vm.shoppingList.items);
-                return DataService.getUserIngredients();
+                return DataService.getIngredients();
             })
             .then(function(ingredients){
                 vm.ingredients = ingredients.data.map(function(item){return item.name});               

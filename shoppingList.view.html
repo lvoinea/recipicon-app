@@ -55,16 +55,16 @@
             </div>
             <div class="panel-body">        
 
-              <table class="table table-striped" ng-repeat="location in vm.shops[vm.selectedShopId].locations">
+              <table class="table table-striped" ng-repeat="locationId in vm.shops[vm.selectedShopId].locations">
                 <tbody>
                   <tr>
-                    <td>{{location.name}}</td>        
+                    <td>{{vm.locations[locationId].name}}</td>        
                   </tr>
                   <tr>
                     <td>
                         <ul>
-                            <li ng-repeat="item in vm.listIngredients" ng-if="vm.ingredentLocations[item.id][vm.selectedShopId] == location.id">
-                                {{item.name}} ( {{item.quantity}} )                   
+                            <li ng-repeat="ingredient in vm.listIngredients" ng-if="vm.ingredentLocations[ingredient.id].indexOf(locationId) >=0">
+                                {{ingredient.name}} ( {{ingredient.quantity}} )                   
                             </li>
                        </ul> 
                     </td>        
@@ -80,8 +80,8 @@
                   <tr>
                     <td>
                         <ul>
-                            <li ng-repeat="item in vm.listIngredients" ng-if="!vm.ingredentLocations[item.id][vm.selectedShopId]">
-                                {{item.name}} ( {{item.quantity}} )                   
+                            <li ng-repeat="ingredient in vm.listIngredients" ng-if="!vm.ingredientHasLocation(ingredient.id,vm.selectedShopId)">
+                                {{ingredient.name}} ( {{ingredient.quantity}} )                   
                             </li>
                        </ul> 
                     </td>        
