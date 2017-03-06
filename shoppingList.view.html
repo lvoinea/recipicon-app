@@ -1,7 +1,7 @@
-<div class="row" style="text-align:center;" ng-if="vm.loading">   
+<div class="row" style="text-align:center;" ng-if="vm.isLoading()">   
     <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading ...
 </div>
-<div ng-if="!vm.loading">
+<div ng-if="!vm.isLoading()">
     <h3 class="text-center">
         Shopping list {{vm.shoppingList.name}} </br>
         <small>{{vm.shoppingList.date}}</small>
@@ -55,16 +55,16 @@
             </div>
             <div class="panel-body">        
 
-              <table class="table table-striped" ng-repeat="locationId in vm.shops[vm.selectedShopId].locations">
+              <table class="table table-striped" ng-repeat="location in vm.getShopLocations(vm.selectedShopId)">
                 <tbody>
                   <tr>
-                    <td>{{vm.locations[locationId].name}}</td>        
+                    <td>{{location.name}}</td>        
                   </tr>
                   <tr>
                     <td>
                         <ul>
-                            <li ng-repeat="ingredient in vm.listIngredients" ng-if="vm.ingredentLocations[ingredient.id].indexOf(locationId) >=0">
-                                {{ingredient.name}} ( {{ingredient.quantity}} )                   
+                            <li ng-repeat="ingredient in vm.getListIngredients()"  ng-if="vm.ingredientInLocation(ingredient.id, location.id)">
+                                {{vm.getIngredient(ingredient.id)}} ( {{ingredient.quantity}} )                   
                             </li>
                        </ul> 
                     </td>        
@@ -80,8 +80,8 @@
                   <tr>
                     <td>
                         <ul>
-                            <li ng-repeat="ingredient in vm.listIngredients" ng-if="!vm.ingredientHasLocation(ingredient.id,vm.selectedShopId)">
-                                {{ingredient.name}} ( {{ingredient.quantity}} )                   
+                            <li ng-repeat="ingredient in vm.getListIngredients()" ng-if="!vm.ingredientInShop(ingredient.id,vm.selectedShopId)">
+                                {{vm.getIngredient(ingredient.id)}} ( {{ingredient.quantity}} )               
                             </li>
                        </ul> 
                     </td>        

@@ -145,6 +145,7 @@
                 var amount = matches[1].replace(",", ".");
                 var unit = matches[2];
                 
+                //lookup or create ingredient
                 var ingredientId = _.find(_.values(vm.ingredients),
                     function(ingredient) { return (ingredient.name == vm.ingredient); }
                 );
@@ -153,7 +154,8 @@
                     ingredientId = _getLocalId();
                     var ingredient = {
                         'id' : ingredientId,
-                        'name' : vm.ingredient
+                        'name' : vm.ingredient,
+                        'locations':[]
                     }
                     vm.ingredients[ingredientId] = ingredient;
                     DataService.setIngredient(ingredient)
@@ -174,6 +176,7 @@
                     ingredientId = ingredientId.id;
                 }                
               
+                //add recipe ingredient relation
                 vm.recipe.recipe_ingredients.push(
                 {
                     'id': _getLocalId(),
@@ -182,6 +185,7 @@
                     'unit' : unit        
                 })
 
+                //clear view fields
                 vm.ingredient = null;
                 vm.quantity = null;
                 angular.element('#'+focusField).focus();

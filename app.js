@@ -71,9 +71,6 @@
             
             .state('shopping-list', {
                 url: '/shopping-list/:id',
-                params: {
-                    shoppingList: null,
-                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
@@ -93,9 +90,6 @@
             
             .state('shopping-list-edit', {
                 url: '/shopping-list-edit/:id',
-                params: {
-                    shoppingList: null,
-                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
@@ -115,9 +109,6 @@
             
             .state('shopping-list-organize', {
                 url: '/shopping-list-organize',
-                params: {
-                    ingredients: null,
-                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
@@ -189,6 +180,10 @@
         $rootScope.recipes = null;
         $rootScope.recipe = null;
         $rootScope.ingredients = null;
+        $rootScope.shoppingList = null;
+        $rootScope.shops = null;
+        $rootScope.currentShop = null;
+        $rootScope.locations = null;
         
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};
