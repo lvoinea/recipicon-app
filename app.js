@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app', ['ui.router', 'ngCookies', 'ui.bootstrap'])
+        .module('app', ['ui.router', 'ngCookies', 'ui.bootstrap','angularModalService'])
         .config(config)
         .run(run);
 
@@ -108,7 +108,7 @@
             })
             
             .state('shopping-list-organize', {
-                url: '/shopping-list-organize',
+                url: '/shopping-list-organize/:id',
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
@@ -119,7 +119,7 @@
                         controllerAs: 'vm'
                     },
                     "r-body": {
-                        controller: 'OrganizeController',
+                        controller: 'ShoppingListController',
                         templateUrl: 'shoppingList.organize.view.html',
                         controllerAs: 'vm'
                     }

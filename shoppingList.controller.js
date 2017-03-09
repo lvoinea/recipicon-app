@@ -3,9 +3,9 @@
     
     angular.module('app').controller('ShoppingListController', ShoppingListController);
     
-    ShoppingListController.$inject = ['DataService', 'AlertService', '$log', '$state', '$stateParams'];
+    ShoppingListController.$inject = ['DataService', 'AlertService', '$log', '$state', '$stateParams', 'ModalService'];
 
-    function ShoppingListController(DataService, AlertService, $log, $state, $stateParams){
+    function ShoppingListController(DataService, AlertService, $log, $state, $stateParams, ModalService){
         var vm = this;
         
         vm.localId = 0;
@@ -27,6 +27,9 @@
         vm.getIngredient = getIngredient;
         vm.ingredientInLocation = ingredientInLocation;
         vm.ingredientInShop = ingredientInShop;
+        
+        vm.modalAddLocation = modalAddLocation;
+        vm.newLocation = '';
         
         
         vm.edit = edit;
@@ -203,7 +206,7 @@
         }
         
         function organize(){
-            $state.go('shopping-list-organize'); 
+            $state.go('shopping-list-organize',{'id' : vm.shoppingList.id}); 
         }
         
         function create(){
@@ -234,6 +237,18 @@
         }
         
         //---------------------------------------------- Locations 
+        function modalAddLocation(){
+            ModalService.showModal({
+              templateUrl: 'modalAddLocation.html',
+              controller: 'AddLocationController'              
+            }).then(function(modal) {
+              modal.element.modal();
+              modal.close.then(function(result) {
+                vm.newLocation = result ? "You said Yes" : "You said No";
+              });
+            });
+        }
+        
         function getShopLocations(shopId){
             return _.filter(_.values(vm.locations), function(loc){return loc.shop == shopId});            
         } 
