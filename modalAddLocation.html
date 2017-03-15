@@ -3,14 +3,16 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Yes or No?</h4>
+        <h4 class="modal-title">Add new tag</h4>
       </div>
       <div class="modal-body">
-        <p>It's your call...</p>
+        <form name="location" novalidate>
+            <input id="addLocation" type="text" class="form-control" placeholder="Name" ng-model="shopLocation">
+        </form>
       </div>
       <div class="modal-footer">
-        <button type="button" ng-click="close('No')" class="btn btn-default" data-dismiss="modal">No</button>
-        <button type="button" ng-click="close('Yes')" class="btn btn-primary" data-dismiss="modal">Yes</button>
+        <button type="button" ng-click="close('Cancel')" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" ng-click="close(shopLocation)" class="btn btn-primary" data-dismiss="modal">Add</button>
       </div>
     </div>
   </div>

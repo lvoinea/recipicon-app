@@ -23,14 +23,13 @@
         vm.setShop = setShop;
         vm.getShops = getShops;
         vm.getShopLocations = getShopLocations;
+        vm.deleteShopLocation = deleteShopLocation
         vm.getListIngredients =getListIngredients;
         vm.getIngredient = getIngredient;
         vm.ingredientInLocation = ingredientInLocation;
         vm.ingredientInShop = ingredientInShop;
         
         vm.modalAddLocation = modalAddLocation;
-        vm.newLocation = '';
-        
         
         vm.edit = edit;
         vm.organize = organize;
@@ -241,10 +240,21 @@
             ModalService.showModal({
               templateUrl: 'modalAddLocation.html',
               controller: 'AddLocationController'              
-            }).then(function(modal) {
+            })
+            .then(function(modal) {
               modal.element.modal();
-              modal.close.then(function(result) {
-                vm.newLocation = result ? "You said Yes" : "You said No";
+              angular.element('#addLocation').focus();
+              modal.close.then(function(shopLocation) {
+                if (shopLocation != null){
+                    var newLocation = DataService.Location(shopLocation);
+                    DataService.setLocation(newLocation)
+                    .then(function(locations){
+                        // Nop
+                    })
+                    .catch(function(error){
+                        AlertService.setAlert('ERROR: Could not load list of locations (code  ' + error.status + ').');
+                    });
+                }                
               });
             });
         }
@@ -252,6 +262,16 @@
         function getShopLocations(shopId){
             return _.filter(_.values(vm.locations), function(loc){return loc.shop == shopId});            
         } 
+        
+        function deleteShopLocation(shopLocationId){
+            DataService.deleteLocation(shopLocationId)
+            .then(function(locations){
+                // Nop
+            })
+            .catch(function(error){
+                AlertService.setAlert('ERROR: Could not delete location (code  ' + error.status + ').');
+            });
+        }
         
         function ingredientInLocation(ingredientId, locationId){
             return (vm.ingredients[ingredientId].locations.indexOf(locationId) >= 0);

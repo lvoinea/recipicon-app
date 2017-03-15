@@ -18,6 +18,9 @@
             getShops : getShops,
             getCurrentShop : getCurrentShop,
             getLocations : getLocations,
+            setLocation : setLocation,
+            deleteLocation : deleteLocation,
+            Location : Location,
             getShoppingList : getShoppingList,
             setShoppingList : setShoppingList,
             addShoppingListRecipe : addShoppingListRecipe,
@@ -95,7 +98,7 @@
             .then(function(response) {
                 if (_.has($rootScope.recipes, id)){
                     delete $rootScope.recipes[id];
-                }                
+                }                        
             });            
         }
         
@@ -164,6 +167,19 @@
         }
         
         //---------------------------------------------- Location
+        
+        // Pattern: 
+        // Objects are created outside the service and passed to the service
+        // Service caches the objects it receives and passes references to it
+        
+        function Location(name){
+            return {
+                'id' : '_',
+                'name' : name,
+                'shop' : $rootScope.currentShop.id
+            }
+        }        
+        
         function getLocations(){
             var deferred;
             
@@ -182,7 +198,29 @@
             }
             
             return deferred; 
-        }     
+        }
+
+        function setLocation(shopLocation) {            
+            return $http.post($rootScope.service+'/location/'+shopLocation.id, shopLocation)
+            .then(function(response){                
+                var newLocation = response.data
+                if (shopLocation.id == '_'){
+                    // New location added
+                    $rootScope.locations[newLocation.id] = newLocation;
+                }                
+                return $rootScope.locations;
+            });           
+        }
+        
+        function deleteLocation(shopLocationId){
+            return $http.delete($rootScope.service+'/location/'+shopLocationId)
+            .then(function(response){
+                if (_.has($rootScope.locations, shopLocationId)){
+                    delete $rootScope.locations[shopLocationId];
+                } 
+                //TODO: delete from all   $rootScope.ingredients[id].locations        
+            });
+        }
   
         //---------------------------------------------- Shoppig list
         function getShoppingList(id){

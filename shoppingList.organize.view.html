@@ -33,7 +33,7 @@
                   <tr>
                     <td>                    
                     <span class="glyphicon glyphicon-tag text-muted" ></span> {{location.name}}
-                    <a ng-click=""><span style="color:#ff471a;font-size:0.75em;" class="glyphicon glyphicon glyphicon-minus-sign selectable header-button"></span></a>
+                    <a ng-click="vm.deleteShopLocation(location.id);"><span style="color:#ff471a;font-size:0.75em;" class="glyphicon glyphicon glyphicon-minus-sign selectable header-button"></span></a>
                     </td>        
                   </tr>
                   <tr>
@@ -53,13 +53,15 @@
                <table class="table table-striped">
                 <tbody>
                   <tr>
-                    <td>unsorted</td>        
+                    <td>
+                        <span class="glyphicon glyphicon-tag text-muted" ></span> unsorted
+                    </td>        
                   </tr>
                   <tr>
                     <td>
                         <ul>
                             <li ng-repeat="ingredient in vm.getListIngredients()" ng-if="!vm.ingredientInShop(ingredient.id,vm.selectedShopId)">
-                                <a type="button" data-toggle="modal" data-book-id="ingredient.id" data-target="#set_location">
+                                <a>
                                 {{vm.getIngredient(ingredient.id)}}
                                 </a>                                
                             </li>
@@ -70,27 +72,6 @@
               </table>                    
             
             </div> 
-        </div>
-        <!-- =========================================== Set location ========== -->  
-        <div id="set_location" class="modal" role="dialog">
-          <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Modal Header</h4>
-              </div>
-              <div class="modal-body">
-                
-                
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              </div>
-            </div>
-
-          </div>
         </div>
         <!-- =================================================================== -->   
         <p class="text-center">
