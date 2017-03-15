@@ -46,6 +46,9 @@
         vm.loading.ingredients = false;
         vm.isLoading = isLoading;
         
+        vm.deletingLocation = null;
+        vm.addingLocation = false;
+        
         vm.saving = false;
         vm.creating = false;
         
@@ -246,6 +249,7 @@
               angular.element('#addLocation').focus();
               modal.close.then(function(shopLocation) {
                 if (shopLocation != null){
+                    vm.addingLocation = true;
                     var newLocation = DataService.Location(shopLocation);
                     DataService.setLocation(newLocation)
                     .then(function(locations){
@@ -253,7 +257,10 @@
                     })
                     .catch(function(error){
                         AlertService.setAlert('ERROR: Could not load list of locations (code  ' + error.status + ').');
-                    });
+                    })
+                    .finally(function(){
+                        vm.addingLocation = false;
+                    }); 
                 }                
               });
             });
@@ -264,13 +271,17 @@
         } 
         
         function deleteShopLocation(shopLocationId){
+            vm.deletingLocation = shopLocationId;
             DataService.deleteLocation(shopLocationId)
             .then(function(locations){
                 // Nop
             })
             .catch(function(error){
                 AlertService.setAlert('ERROR: Could not delete location (code  ' + error.status + ').');
-            });
+            })
+            .finally(function(){
+                vm.deletingLocation = null;
+            }); 
         }
         
         function ingredientInLocation(ingredientId, locationId){

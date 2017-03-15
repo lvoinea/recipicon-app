@@ -218,7 +218,7 @@
                 if (_.has($rootScope.locations, shopLocationId)){
                     delete $rootScope.locations[shopLocationId];
                 } 
-                //TODO: delete from all   $rootScope.ingredients[id].locations        
+                //TODO: delete location from all $rootScope.ingredients[id].locations        
             });
         }
   
