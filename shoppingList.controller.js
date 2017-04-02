@@ -241,12 +241,17 @@
         //---------------------------------------------- Locations 
         function modalAddLocation(){
             ModalService.showModal({
-              templateUrl: 'modalAddLocation.html',
-              controller: 'AddLocationController'              
+              templateUrl: 'modalEntry.html',
+              controller: 'ModalEntryController',
+              controllerAs : 'vm',
+              inputs:{
+                  title: 'Add new tag',
+                  oldEntry: ''
+              }
             })
             .then(function(modal) {
               modal.element.modal();
-              angular.element('#addLocation').focus();
+              angular.element('#entryField').focus();
               modal.close.then(function(shopLocation) {
                 if (shopLocation != null){
                     vm.addingLocation = true;
