@@ -39,16 +39,12 @@
                    <button type="button" class="btn btn-primary btn-sm header-button" ng-click="vm.modalAddLocation()"> 
                    +<span class="glyphicon glyphicon-tag header-button" ng-if="!vm.addingLocation"></span>
                    <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.addingLocation"></span>
-                   </button>
-                   
-                </h3>
-                
+                   </button>                   
+                </h3>                
             </div>
-            
 
-            
-              <div class="panel-body">   
-              
+            <div class="panel-body">   
+              <!-- ============================== known location ======== -->
               <table class="table table-striped" ng-repeat="location in vm.getShopLocations(vm.selectedShopId)">
                 <tbody>
                   <tr>
@@ -73,7 +69,7 @@
                   </tr>
                 </tbody>
               </table>
-              
+               <!-- ================================= unnnsorted ======== -->
                <table class="table table-striped">
                 <tbody>
                   <tr>
@@ -85,9 +81,10 @@
                     <td>
                         <ul>
                             <li ng-repeat="ingredient in vm.getListIngredients()" ng-if="!vm.ingredientInShop(ingredient.id,vm.selectedShopId)">
-                                <a>
+                                <a ng-click="vm.modalSetLocation(ingredient.id, null)">
                                 {{vm.getIngredient(ingredient.id)}}
-                                </a>                                
+                                </a>
+                                 <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="ingredient.id == vm.settingLocation"></span>
                             </li>
                        </ul> 
                     </td>        

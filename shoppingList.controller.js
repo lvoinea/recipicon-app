@@ -30,6 +30,7 @@
         vm.ingredientInShop = ingredientInShop;
         
         vm.modalAddLocation = modalAddLocation;
+        vm.modalSetLocation = modalSetLocation;
         
         vm.edit = edit;
         vm.organize = organize;
@@ -48,6 +49,7 @@
         
         vm.deletingLocation = null;
         vm.addingLocation = false;
+        vm.settingLocation = false;
         
         vm.saving = false;
         vm.creating = false;
@@ -241,8 +243,8 @@
         //---------------------------------------------- Locations 
         function modalAddLocation(){
             ModalService.showModal({
-              templateUrl: 'modalEntry.html',
-              controller: 'ModalEntryController',
+              templateUrl: 'modalEntryEdit.html',
+              controller: 'ModalEntryEditController',
               controllerAs : 'vm',
               inputs:{
                   title: 'Add new tag',
@@ -267,6 +269,42 @@
                         vm.addingLocation = false;
                     }); 
                 }                
+              });
+            });
+        }
+
+        function modalSetLocation(ingredientId, oldLocationId){
+            ModalService.showModal({
+              templateUrl: 'modalListSelect.html',
+              controller: 'ModalListSelectController',
+              controllerAs : 'vm',
+              inputs:{
+                  title: 'Select tag for ' + vm.ingredients[ingredientId].name,
+                  locations: _.filter(vm.locations, {'shop' : vm.selectedShopId})
+              }
+            })
+            .then(function(modal) {
+              modal.element.modal();
+              modal.close.then(function(shopLocation) {
+                if (shopLocation != null){
+                    vm.settingLocation = ingredientId;
+
+                    var ingredient = JSON.parse(JSON.stringify(vm.ingredients[ingredientId]));
+                    ingredient.locations = _.filter(ingredient.locations,function(o){ return o!= oldLocationId });
+                    ingredient.locations.push(shopLocation);
+
+                    DataService.setIngredient(ingredient)
+                    .then(function(newIngredient){
+                        vm.ingredients[ingredientId] = newIngredient;
+                    })
+                    .catch(function(error){
+                        AlertService.setAlert('ERROR: Could not update ingredient tag (code  ' + error.status + ').');
+                    })
+                    .finally(function(){
+                        vm.settingLocation = null;
+                    }); 
+
+                }
               });
             });
         }

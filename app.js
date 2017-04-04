@@ -177,13 +177,13 @@
         
         //Configure service path
         $rootScope.service = '/api';
-        $rootScope.recipes = null;
-        $rootScope.recipe = null;
-        $rootScope.ingredients = null;
-        $rootScope.shoppingList = null;
-        $rootScope.shops = null;
-        $rootScope.currentShop = null;
-        $rootScope.locations = null;
+        $rootScope.recipes = null;          // The list of known recipes
+        $rootScope.recipe = null;           // Currently selected entitites
+        $rootScope.ingredients = null;      // List of user known ingredients (id,name, [locationId])
+        $rootScope.shoppingList = null;     // Currently selected shopping list
+        $rootScope.shops = null;            // List of user known shops (id, name)
+        $rootScope.currentShop = null;      // Currently selected shops
+        $rootScope.locations = null;        // List of locations (id, name, shopId)
         
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};
