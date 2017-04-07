@@ -45,11 +45,14 @@
 
             <div class="panel-body">   
               <!-- ============================== known location ======== -->
-              <table class="table table-striped" ng-repeat="location in vm.getShopLocations(vm.selectedShopId)">
+              <table class="table table-striped" ng-repeat="location in vm.getShopLocations(vm.selectedShopId) | orderBy : 'name'">
                 <tbody>
                   <tr>
                     <td>                    
-                    <span class="glyphicon glyphicon-tag text-muted"></span> {{location.name}}
+                    <span class="glyphicon glyphicon-tag text-muted"></span>
+                    <a ng-click="vm.modalEditLocation(location)">
+                    {{location.name}}
+                    </a>                     
                     <a ng-click="vm.deleteShopLocation(location.id);" ng-if="location.id != vm.deletingLocation">
                         <span style="color:#ff471a;font-size:0.75em;" class="glyphicon glyphicon glyphicon-minus-sign selectable header-button"></span>                        
                     </a>
@@ -60,9 +63,11 @@
                     <td>
                         <ul>
                             <li ng-repeat="ingredient in vm.getListIngredients()"  ng-if="vm.ingredientInLocation(ingredient.id, location.id)">
-                                <a>
-                                {{vm.getIngredient(ingredient.id)}} 
-                                </a>                                
+                                <a ng-click="vm.modalChangeLocation(ingredient.id, location.id)" ng-if="ingredient.id != vm.settingLocation">
+                                {{vm.getIngredient(ingredient.id)}}
+                                </a>
+                                <span ng-if="ingredient.id == vm.settingLocation">{{vm.getIngredient(ingredient.id)}}</span>
+                                <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="ingredient.id == vm.settingLocation"></span>
                             </li>
                        </ul> 
                     </td>        
@@ -70,7 +75,7 @@
                 </tbody>
               </table>
                <!-- ================================= unnnsorted ======== -->
-               <table class="table table-striped">
+               <table class="table table-striped" ng-if="!vm.allIngredientsInLocation(vm.selectedShopId)">
                 <tbody>
                   <tr>
                     <td>
@@ -81,9 +86,10 @@
                     <td>
                         <ul>
                             <li ng-repeat="ingredient in vm.getListIngredients()" ng-if="!vm.ingredientInShop(ingredient.id,vm.selectedShopId)">
-                                <a ng-click="vm.modalSetLocation(ingredient.id, null)">
+                                <a ng-click="vm.modalChangeLocation(ingredient.id, null)" ng-if="ingredient.id != vm.settingLocation">
                                 {{vm.getIngredient(ingredient.id)}}
                                 </a>
+                                <span ng-if="ingredient.id == vm.settingLocation">{{vm.getIngredient(ingredient.id)}}</span>
                                  <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="ingredient.id == vm.settingLocation"></span>
                             </li>
                        </ul> 

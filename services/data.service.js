@@ -208,7 +208,7 @@
                     // New location added
                     $rootScope.locations[newLocation.id] = newLocation;
                 }                
-                return $rootScope.locations;
+                return newLocation;
             });           
         }
         

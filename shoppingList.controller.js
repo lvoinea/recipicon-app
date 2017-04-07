@@ -28,9 +28,11 @@
         vm.getIngredient = getIngredient;
         vm.ingredientInLocation = ingredientInLocation;
         vm.ingredientInShop = ingredientInShop;
+        vm.allIngredientsInLocation = allIngredientsInLocation;
         
         vm.modalAddLocation = modalAddLocation;
-        vm.modalSetLocation = modalSetLocation;
+        vm.modalEditLocation = modalEditLocation;
+        vm.modalChangeLocation = modalChangeLocation;
         
         vm.edit = edit;
         vm.organize = organize;
@@ -254,16 +256,16 @@
             .then(function(modal) {
               modal.element.modal();
               angular.element('#entryField').focus();
-              modal.close.then(function(shopLocation) {
-                if (shopLocation != null){
+              modal.close.then(function(locationName) {
+                if (locationName != null){
                     vm.addingLocation = true;
-                    var newLocation = DataService.Location(shopLocation);
+                    var newLocation = DataService.Location(locationName);
                     DataService.setLocation(newLocation)
-                    .then(function(locations){
+                    .then(function(location){
                         // Nop
                     })
                     .catch(function(error){
-                        AlertService.setAlert('ERROR: Could not load list of locations (code  ' + error.status + ').');
+                        AlertService.setAlert('ERROR: Could not load new location (code  ' + error.status + ').');
                     })
                     .finally(function(){
                         vm.addingLocation = false;
@@ -273,7 +275,40 @@
             });
         }
 
-        function modalSetLocation(ingredientId, oldLocationId){
+        function modalEditLocation(location){
+            ModalService.showModal({
+              templateUrl: 'modalEntryEdit.html',
+              controller: 'ModalEntryEditController',
+              controllerAs : 'vm',
+              inputs:{
+                  title: 'Edit tag',
+                  oldEntry: location.name
+              }
+            })
+            .then(function(modal) {
+              modal.element.modal();
+              angular.element('#entryField').focus();
+              modal.close.then(function(locationName) {
+                if (locationName != null){
+                    vm.deletingLocation = location.id;
+                    var newLocation = JSON.parse(JSON.stringify(location));
+                    newLocation.name = locationName;
+                    DataService.setLocation(newLocation)
+                    .then(function(resultLocation){
+                        location.name = resultLocation.name;
+                    })
+                    .catch(function(error){
+                        AlertService.setAlert('ERROR: Could not load updated location (code  ' + error.status + ').');
+                    })
+                    .finally(function(){
+                        vm.deletingLocation = false;
+                    }); 
+                }                
+              });
+            });
+        }
+
+        function modalChangeLocation(ingredientId, oldLocationId){
             ModalService.showModal({
               templateUrl: 'modalListSelect.html',
               controller: 'ModalListSelectController',
@@ -290,6 +325,7 @@
                     vm.settingLocation = ingredientId;
 
                     var ingredient = JSON.parse(JSON.stringify(vm.ingredients[ingredientId]));
+
                     ingredient.locations = _.filter(ingredient.locations,function(o){ return o!= oldLocationId });
                     ingredient.locations.push(shopLocation);
 
@@ -314,10 +350,14 @@
         } 
         
         function deleteShopLocation(shopLocationId){
+            
             vm.deletingLocation = shopLocationId;
             DataService.deleteLocation(shopLocationId)
             .then(function(locations){
-                // Nop
+                 _.forEach(_.keys(vm.ingredients), function(ingredientId) {
+                    var ingredient = vm.ingredients[ingredientId];
+                    ingredient.locations = _.filter(ingredient.locations,function(o){ return o!= shopLocationId })
+                    });
             })
             .catch(function(error){
                 AlertService.setAlert('ERROR: Could not delete location (code  ' + error.status + ').');
@@ -336,7 +376,14 @@
                 function(locationId) {return vm.locations[locationId].shop}
                 )
             return (ingredientShops.indexOf(shopId) >= 0);
-        }         
+        }
+
+        function allIngredientsInLocation(shopId){
+            var unsortedIngredients = _.filter(_.keys(vm.listIngredients), function(ingredientId){
+                return !ingredientInShop(ingredientId, shopId);
+            })
+            return _.isEmpty(unsortedIngredients);
+        }
         
         //---------------------------------------------- Ingredients
         function getListIngredients(){
