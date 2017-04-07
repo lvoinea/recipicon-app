@@ -282,7 +282,7 @@
               controller: 'ModalEntryEditController',
               controllerAs : 'vm',
               inputs:{
-                  title: 'Edit tag: '+ vm.locations[locationId].name,
+                  title: 'Edit tag: '+ location.name,
                   oldEntry: location.name
               }
             })
