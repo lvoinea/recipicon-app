@@ -53,10 +53,10 @@
                     <a ng-click="vm.modalEditLocation(location)">
                     {{location.name}}
                     </a>                     
-                    <a ng-click="vm.deleteShopLocation(location.id);" ng-if="location.id != vm.deletingLocation">
+                    <a ng-click="vm.modalDeleteLocation(location.id);" ng-if="location.id != vm.editingLocation">
                         <span style="color:#ff471a;font-size:0.75em;" class="glyphicon glyphicon glyphicon-minus-sign selectable header-button"></span>                        
                     </a>
-                    <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate header-button" ng-if="location.id == vm.deletingLocation"></span>
+                    <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate header-button" ng-if="location.id == vm.editingLocation"></span>
                     </td>        
                   </tr>
                   <tr>

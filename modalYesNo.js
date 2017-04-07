@@ -1,15 +1,14 @@
 (function() {
     'use strict';
 
-    angular.module('app').controller('ModalEntryEditController', ModalEntryEditController);
+    angular.module('app').controller('ModalYesNoController', ModalYesNoController);
     
-    ModalEntryEditController.$inject = ['$scope', '$element', 'title', 'oldEntry', 'close'];
+    ModalYesNoController.$inject = ['$scope', '$element', 'title', 'close'];
     
-    function ModalEntryEditController($scope, $element, title, oldEntry, close) {
+    function ModalYesNoController($scope, $element, title, close) {
 
         var vm = this;
     
-        vm.entry = oldEntry;     
         vm.title = title;
         vm.entryClose = entryClose
         

@@ -33,6 +33,7 @@
         vm.modalAddLocation = modalAddLocation;
         vm.modalEditLocation = modalEditLocation;
         vm.modalChangeLocation = modalChangeLocation;
+        vm.modalDeleteLocation = modalDeleteLocation;
         
         vm.edit = edit;
         vm.organize = organize;
@@ -49,7 +50,7 @@
         vm.loading.ingredients = false;
         vm.isLoading = isLoading;
         
-        vm.deletingLocation = null;
+        vm.editingLocation = null;
         vm.addingLocation = false;
         vm.settingLocation = false;
         
@@ -265,7 +266,7 @@
                         // Nop
                     })
                     .catch(function(error){
-                        AlertService.setAlert('ERROR: Could not load new location (code  ' + error.status + ').');
+                        AlertService.setAlert('ERROR: Could not create new tag (code  ' + error.status + ').');
                     })
                     .finally(function(){
                         vm.addingLocation = false;
@@ -281,7 +282,7 @@
               controller: 'ModalEntryEditController',
               controllerAs : 'vm',
               inputs:{
-                  title: 'Edit tag',
+                  title: 'Edit tag: '+ vm.locations[locationId].name,
                   oldEntry: location.name
               }
             })
@@ -290,7 +291,7 @@
               angular.element('#entryField').focus();
               modal.close.then(function(locationName) {
                 if (locationName != null){
-                    vm.deletingLocation = location.id;
+                    vm.editingLocation = location.id;
                     var newLocation = JSON.parse(JSON.stringify(location));
                     newLocation.name = locationName;
                     DataService.setLocation(newLocation)
@@ -298,10 +299,10 @@
                         location.name = resultLocation.name;
                     })
                     .catch(function(error){
-                        AlertService.setAlert('ERROR: Could not load updated location (code  ' + error.status + ').');
+                        AlertService.setAlert('ERROR: Could not load updated tag (code  ' + error.status + ').');
                     })
                     .finally(function(){
-                        vm.deletingLocation = false;
+                        vm.editingLocation = false;
                     }); 
                 }                
               });
@@ -344,6 +345,38 @@
               });
             });
         }
+
+        function modalDeleteLocation(locationId){
+            ModalService.showModal({
+              templateUrl: 'modalYesNo.html',
+              controller: 'ModalYesNoController',
+              controllerAs : 'vm',
+              inputs:{
+                  title: 'Delete tag: ' + vm.locations[locationId].name
+              }
+            })
+            .then(function(modal) {
+              modal.element.modal();
+              modal.close.then(function(choiceName) {
+                if (choiceName == 'yes'){
+                    vm.editingLocation = locationId;
+                    DataService.deleteLocation(locationId)
+                    .then(function(locations){
+                        _.forEach(_.keys(vm.ingredients), function(ingredientId) {
+                            var ingredient = vm.ingredients[ingredientId];
+                            ingredient.locations = _.filter(ingredient.locations,function(o){ return o!= locationId })
+                            });
+                    })
+                    .catch(function(error){
+                        AlertService.setAlert('ERROR: Could not delete tag (code  ' + error.status + ').');
+                    })
+                    .finally(function(){
+                        vm.editingLocation = null;
+                    }); 
+                }
+              });
+            });
+        }
         
         function getShopLocations(shopId){
             return _.filter(_.values(vm.locations), function(loc){return loc.shop == shopId});            
@@ -351,7 +384,7 @@
         
         function deleteShopLocation(shopLocationId){
             
-            vm.deletingLocation = shopLocationId;
+            vm.editingLocation = shopLocationId;
             DataService.deleteLocation(shopLocationId)
             .then(function(locations){
                  _.forEach(_.keys(vm.ingredients), function(ingredientId) {
@@ -360,10 +393,10 @@
                     });
             })
             .catch(function(error){
-                AlertService.setAlert('ERROR: Could not delete location (code  ' + error.status + ').');
+                AlertService.setAlert('ERROR: Could not delete tag (code  ' + error.status + ').');
             })
             .finally(function(){
-                vm.deletingLocation = null;
+                vm.editingLocation = null;
             }); 
         }
         

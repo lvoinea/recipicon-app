@@ -5,14 +5,9 @@
         <button type="button" class="close" ng-click="close(null)" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title">{{vm.title}}</h4>
       </div>
-      <div class="modal-body">
-        <form name="entryForm" novalidate>
-            <input id="entryField" type="text" class="form-control" placeholder="name" ng-model="vm.entry">
-        </form>
-      </div>
       <div class="modal-footer"> 
-        <button type="button" ng-click="vm.entryClose(null)" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" ng-click="vm.entryClose(vm.entry)" class="btn btn-primary" data-dismiss="modal">Save</button>
+        <button type="button" ng-click="vm.entryClose('no')" class="btn btn-default" data-dismiss="modal">No</button>
+        <button type="button" ng-click="vm.entryClose('yes')" class="btn btn-primary" data-dismiss="modal">Yes</button>
       </div>
     </div>
   </div>
