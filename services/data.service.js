@@ -9,23 +9,37 @@
 
     function DataService($http, $log, $q, $rootScope) {
         return {
+            //-- Recipe
+            Recipe : Recipe,
             getRecipes: getRecipes,
-            getRecipe: getRecipe,            
+            getRecipe: getRecipe,
             setRecipe: setRecipe,
             deleteRecipe: deleteRecipe,
+            //-- Ingredient
             getIngredients : getIngredients,
             setIngredient : setIngredient,
+            //-- Shop
+            Shop : Shop,
             getShops : getShops,
             getCurrentShop : getCurrentShop,
+            setCurrentShop : setCurrentShop,
+            setShop : setShop,
+            deleteShop : deleteShop,
+            //-- Location
+            Location : Location,
             getLocations : getLocations,
             setLocation : setLocation,
             deleteLocation : deleteLocation,
-            Location : Location,
+            //-- Shopping list
             getShoppingList : getShoppingList,
             setShoppingList : setShoppingList,
             addShoppingListRecipe : addShoppingListRecipe,
             removeShoppingListRecipe : removeShoppingListRecipe            
         };
+
+        //---------------------------------------------- Design patterns
+        // Objects are created outside the service and passed to the service
+        // Service caches the objects it receives and passes references to it
         
         //---------------------------------------------- Recipe
         function Recipe(){
@@ -129,6 +143,13 @@
         }
         
         //---------------------------------------------- Shop
+        function Shop(name){
+            return {
+                'id' : '_',
+                'name' : name,
+            }
+        }
+
         function getShops(){
             var deferred;
             
@@ -165,12 +186,53 @@
         function setCurrentShop(id){
             return $http.post($rootScope.service+'/shop/current', {'id':id});
         }
+
+        function setShop(shop){
+            return $http.post($rootScope.service+'/shop/'+shop.id, shop)
+            .then(function(response){                
+                var newShop = response.data
+                if (shop.id == '_'){
+                    // New shop added
+                    $rootScope.shops[newShop.id] = newShop;
+                }                
+                return newShop;
+            });      
+        }
+
+        function deleteShop(shopId){
+            return $http.delete($rootScope.service+'/shop/'+shopId)
+            .then(function(response){
+
+                // Remove shp from cache
+                if (_.has($rootScope.shops, shopId)){
+                    delete $rootScope.shops[shopId];
+                } 
+
+                //Remove all locations referring the shop
+                _.forEach(_.keys($rootScope.locations), function(locationId){
+                    if ($rootScope.locations[locationId].shopId == shopId){
+                        delete $rootScope.locations[locationId];
+                    }
+                });
+
+                //Remove all references to location frrom ingredients
+                _.forEach(_.keys($rootScope.ingredients), function(ingredientId){
+                   var ingredient = $rootScope.ingredients[ingredientId];
+                   ingredient.locations = _.filter(ingredient.locations, function(locationId){
+                       return _.has( $rootScope.locations, locationId);
+                   })
+                });
+
+                //Remove current shop is same as deleted
+                if ($rootScope.currentShop.id == shopId){
+                    $rootScope.currentShop = null;
+                }
+
+                return $rootScope.shops;
+            });
+        }
         
         //---------------------------------------------- Location
-        
-        // Pattern: 
-        // Objects are created outside the service and passed to the service
-        // Service caches the objects it receives and passes references to it
         
         function Location(name){
             return {
@@ -178,7 +240,7 @@
                 'name' : name,
                 'shop' : $rootScope.currentShop.id
             }
-        }        
+        }
         
         function getLocations(){
             var deferred;
@@ -215,10 +277,22 @@
         function deleteLocation(shopLocationId){
             return $http.delete($rootScope.service+'/location/'+shopLocationId)
             .then(function(response){
+                
+                //Remove location from cache
                 if (_.has($rootScope.locations, shopLocationId)){
                     delete $rootScope.locations[shopLocationId];
                 } 
-                //TODO: delete location from all $rootScope.ingredients[id].locations        
+
+                //Remove all references to location frrom ingredients
+                _.forEach(_.keys($rootScope.ingredients), function(ingredientId){
+                   var ingredient = $rootScope.ingredients[ingredientId];
+                   ingredient.locations = _.filter(ingredient.locations, function(locationId){
+                       return (locationId != shopLocationId);
+                   })
+                });
+
+                return $rootScope.locations;
+                
             });
         }
   

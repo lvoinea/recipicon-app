@@ -9,14 +9,14 @@
      
                   <div class="panel">
         <div class="btn-group btn-group-justified" role="group" aria-label="...">
-            <a type="button" class="btn btn-primary btn-sm" ng-click="">
-                Add <span class="glyphicon glyphicon-globe">
+            <a type="button" class="btn btn-primary btn-sm" ng-click="vm.modalAddShop()">
+                Add shop <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.addingShop"></span>
             </a>
-            <a type="button" class="btn btn-primary btn-sm" ng-click="">
-                Edit <span class="glyphicon glyphicon-globe">
+            <a type="button" class="btn btn-primary btn-sm" ng-click="vm.modalEditShop(vm.shops[vm.selectedShopId])">
+                Edit shop <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.editingShop"></span>
             </a>
-            <a type="button" class="btn btn-primary btn-sm" ng-click="">
-                Delete <span class="glyphicon glyphicon-globe">
+            <a type="button" class="btn btn-primary btn-sm" ng-click="vm.modalDeleteShop(vm.selectedShopId)">
+                Delete shop <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.deletingShop"></span>
             </a>
         </div>
     </div>
@@ -32,8 +32,9 @@
                        <select ng-model="vm.selectedShopId"                           
                                 ng-options="shop.id as shop.name for shop in vm.getShops()" 
                                 ng-change="vm.setShop()"
-                                >                      
+                                >
                         </select>
+                        <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.selectingShop"></span>
                     </span>      
 
                    <button type="button" class="btn btn-primary btn-sm header-button" ng-click="vm.modalAddLocation()"> 

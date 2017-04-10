@@ -20,8 +20,8 @@
         
         vm.deleteItem = deleteItem;
         vm.addItem = addItem;
-        vm.setShop = setShop;
         vm.getShops = getShops;
+        vm.setShop = setShop;
         vm.getShopLocations = getShopLocations;
         vm.deleteShopLocation = deleteShopLocation
         vm.getListIngredients =getListIngredients;
@@ -34,6 +34,9 @@
         vm.modalEditLocation = modalEditLocation;
         vm.modalChangeLocation = modalChangeLocation;
         vm.modalDeleteLocation = modalDeleteLocation;
+        vm.modalAddShop = modalAddShop;
+        vm.modalEditShop = modalEditShop;
+        vm.modalDeleteShop = modalDeleteShop;
         
         vm.edit = edit;
         vm.organize = organize;
@@ -53,6 +56,10 @@
         vm.editingLocation = null;
         vm.addingLocation = false;
         vm.settingLocation = false;
+        vm.addingShop = false;
+        vm.editingShop = false;
+        vm.deletingShop = false;
+        vm.selectingShop = false;
         
         vm.saving = false;
         vm.creating = false;
@@ -215,7 +222,7 @@
         function organize(){
             $state.go('shopping-list-organize',{'id' : vm.shoppingList.id}); 
         }
-        
+
         function create(){
             vm.creating = true;
             var shoppingList = {'id':'_','items':[]}
@@ -232,17 +239,121 @@
         }        
         
         //---------------------------------------------- Shops 
+        function setShop(){
+            vm.selectingShop = true;
+            DataService.setCurrentShop(vm.selectedShopId)
+            .then(function(shop){
+                //nop
+            })
+            .catch(function(error){
+                AlertService.setAlert('ERROR: Could not select shop (code  ' + error.status + ').');
+            })
+            .finally(function(){
+                vm.selectingShop = false;
+            }); 
+        }
+        
+        //TODO: remove error when delteing a shop
+
         function getShops(){
-            //return _.map(_.values(vm.shops),'name');
             return _.values(vm.shops);
         }
         
-        function setShop(){
-            $log.info(vm.selectedShopId);
-            //TODO: get ingredient location for the shop
-            //TODO: group ingredients on location
+        function modalAddShop(){
+            ModalService.showModal({
+              templateUrl: 'modalEntryEdit.html',
+              controller: 'ModalEntryEditController',
+              controllerAs : 'vm',
+              inputs:{
+                  title: 'Add new shop',
+                  oldEntry: ''
+              }
+            })
+            .then(function(modal) {
+              modal.element.modal();
+              angular.element('#entryField').focus();
+              modal.close.then(function(shopName) {
+                if (shopName != null){
+                    vm.addingShop = true;
+                    var newShop = DataService.Shop(shopName);
+                    DataService.setShop(newShop)
+                    .then(function(shop){
+                        vm.selectedShopId = shop.id;
+                        setShop();
+                    })
+                    .catch(function(error){
+                        AlertService.setAlert('ERROR: Could not create new shop (code  ' + error.status + ').');
+                    })
+                    .finally(function(){
+                        vm.addingShop = false;
+                    }); 
+                }                
+              });
+            });
         }
-        
+
+        function modalEditShop(shop){
+            ModalService.showModal({
+              templateUrl: 'modalEntryEdit.html',
+              controller: 'ModalEntryEditController',
+              controllerAs : 'vm',
+              inputs:{
+                  title: 'Edit shop: ' + shop.name,
+                  oldEntry: shop.name
+              }
+            })
+            .then(function(modal) {
+              modal.element.modal();
+              angular.element('#entryField').focus();
+              modal.close.then(function(shopName) {
+                if (shopName != null){
+                    vm.editingShop = shop.id;
+                    var newShop = JSON.parse(JSON.stringify(shop));
+                    newShop.name = shopName;
+                    DataService.setShop(newShop)
+                    .then(function(resultShop){
+                        shop.name = resultShop.name;
+                    })
+                    .catch(function(error){
+                        AlertService.setAlert('ERROR: Could not load updated shop (code  ' + error.status + ').');
+                    })
+                    .finally(function(){
+                        vm.editingShop = false;
+                    }); 
+                }        
+              });
+            });
+        }
+
+        function modalDeleteShop(shopId){
+            ModalService.showModal({
+              templateUrl: 'modalYesNo.html',
+              controller: 'ModalYesNoController',
+              controllerAs : 'vm',
+              inputs:{
+                  title: 'Delete shop: ' + vm.shops[shopId].name + ' ?'
+              }
+            })
+            .then(function(modal) {
+              modal.element.modal();
+              modal.close.then(function(choiceName) {
+                if (choiceName == 'yes'){
+                    vm.deletingShop = true;
+                    DataService.deleteShop(shopId)
+                    .then(function(locations){
+                        //nop
+                    })
+                    .catch(function(error){
+                        AlertService.setAlert('ERROR: Could not delete shop (code  ' + error.status + ').');
+                    })
+                    .finally(function(){
+                        vm.deletingShop = null;
+                    }); 
+                }
+              });
+            });
+        }
+
         //---------------------------------------------- Locations 
         function modalAddLocation(){
             ModalService.showModal({
@@ -352,7 +463,7 @@
               controller: 'ModalYesNoController',
               controllerAs : 'vm',
               inputs:{
-                  title: 'Delete tag: ' + vm.locations[locationId].name
+                  title: 'Delete tag: ' + vm.locations[locationId].name + ' ?'
               }
             })
             .then(function(modal) {
@@ -362,10 +473,7 @@
                     vm.editingLocation = locationId;
                     DataService.deleteLocation(locationId)
                     .then(function(locations){
-                        _.forEach(_.keys(vm.ingredients), function(ingredientId) {
-                            var ingredient = vm.ingredients[ingredientId];
-                            ingredient.locations = _.filter(ingredient.locations,function(o){ return o!= locationId })
-                            });
+                        //nop
                     })
                     .catch(function(error){
                         AlertService.setAlert('ERROR: Could not delete tag (code  ' + error.status + ').');
@@ -426,9 +534,6 @@
         function getIngredient(ingredientId){
             return vm.ingredients[ingredientId].name;
         }
-        
-        //TODO: set ingredient location changes all locations
-        //TODO: location not detected anyway in list
         
         function deleteItem(id){
             for( var i = 0; i< vm.shoppingList.items.length; i++){
