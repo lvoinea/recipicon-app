@@ -48,26 +48,39 @@
                        <select ng-model="vm.selectedShopId"                           
                                 ng-options="shop.id as shop.name for shop in vm.getShops()" 
                                 ng-change="vm.setShop()"
-                                >                      
+                                >
                         </select>
-                    </span>                    
+                    </span>
+
+                    <button type="button" class="btn btn-secondary btn-sm header-button" ng-if="!vm.showingCkecked" ng-click="vm.showingCkecked = !vm.showingCkecked;"> 
+                            <span class="glyphicon glyphicon-play"></span>
+                    </button>
+
+                     <button type="button" class="btn btn-secondary btn-sm header-button" ng-if="vm.showingCkecked" ng-click="vm.showingCkecked = !vm.showingCkecked;"> 
+                            <span class="glyphicon glyphicon-pause"></span>
+                    </button>
+
                 </h3>
             </div>
-            <div class="panel-body">        
-
+            <div class="panel-body">
+                TODO: connect checkbox to ingredient state
+                TODO: use styling for checked items
               <table class="table table-striped" ng-repeat="location in vm.getShopLocations(vm.selectedShopId)">
                 <tbody>
                   <tr>
-                    <td>{{location.name}}</td>        
+                    <td>{{location.name}}</td>
                   </tr>
                   <tr>
                     <td>
                         <ul>
                             <li ng-repeat="ingredient in vm.getListIngredients()"  ng-if="vm.ingredientInLocation(ingredient.id, location.id)">
-                                {{vm.getIngredient(ingredient.id)}} ( {{ingredient.quantity}} )                   
+                                <div class="checkbox" ng-if="vm.showingCkecked">
+                                    <input type="checkbox" value="">{{vm.getIngredient(ingredient.id)}} ( {{ingredient.quantity}} )
+                                </div>
+                                <div class="checkbox" ng-if="!vm.showingCkecked">{{vm.getIngredient(ingredient.id)}} ( {{ingredient.quantity}} )</div>
                             </li>
                        </ul> 
-                    </td>        
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -75,19 +88,22 @@
                <table class="table table-striped">
                 <tbody>
                   <tr>
-                    <td>unsorted</td>        
+                    <td>unsorted</td>
                   </tr>
                   <tr>
                     <td>
                         <ul>
                             <li ng-repeat="ingredient in vm.getListIngredients()" ng-if="!vm.ingredientInShop(ingredient.id,vm.selectedShopId)">
-                                {{vm.getIngredient(ingredient.id)}} ( {{ingredient.quantity}} )               
+                               <div class="checkbox" ng-if="vm.showingCkecked">
+                                    <input type="checkbox" value="">{{vm.getIngredient(ingredient.id)}} ( {{ingredient.quantity}} )
+                                </div>
+                                <div class="checkbox" ng-if="!vm.showingCkecked">{{vm.getIngredient(ingredient.id)}} ( {{ingredient.quantity}} )</div>              
                             </li>
                        </ul> 
-                    </td>        
+                    </td>
                   </tr>
                 </tbody>
-              </table>                    
+              </table>
             
             </div>        
     </form>
