@@ -180,11 +180,15 @@
             } else {                
                 deferred = $q.when($rootScope.currentShop);                              
             }            
-            return deferred;            
+            return deferred;
         }
         
         function setCurrentShop(id){
-            return $http.post($rootScope.service+'/shop/current', {'id':id});
+            return $http.post($rootScope.service+'/shop/current', {'id':id})
+            .then(function(response){
+                $rootScope.currentShop = response.data;
+                return $rootScope.currentShop;
+            });
         }
 
         function setShop(shop){

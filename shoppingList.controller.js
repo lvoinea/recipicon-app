@@ -63,6 +63,7 @@
         
         vm.saving = false;
         vm.creating = false;
+        vm.showingShopEdits = false;
         
         //---------------------------------------------- Loading
         _loadData($stateParams.id);
@@ -253,8 +254,6 @@
             }); 
         }
         
-        //TODO: remove error when delteing a shop
-
         function getShops(){
             return _.values(vm.shops);
         }
@@ -286,6 +285,7 @@
                     })
                     .finally(function(){
                         vm.addingShop = false;
+                        vm.showingShopEdits = false;
                     }); 
                 }                
               });
@@ -319,8 +319,9 @@
                     })
                     .finally(function(){
                         vm.editingShop = false;
+                        vm.showingShopEdits = false;
                     }); 
-                }        
+                }
               });
             });
         }
@@ -348,6 +349,7 @@
                     })
                     .finally(function(){
                         vm.deletingShop = null;
+                        vm.showingShopEdits = false;
                     }); 
                 }
               });

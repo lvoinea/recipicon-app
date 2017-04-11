@@ -49,6 +49,11 @@ button[disabled=disabled], button:disabled {
     padding: 2px !important;
 }
 
+.small-button {
+    margin: 0 !important;
+    padding: 2px !important;
+}
+
 .modal.ng-enter {
   transition: opacity .5s ease-out;
   opacity: 0;

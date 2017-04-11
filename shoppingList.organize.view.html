@@ -7,20 +7,6 @@
         <small>organize</small>
     </h3>
      
-                  <div class="panel">
-        <div class="btn-group btn-group-justified" role="group" aria-label="...">
-            <a type="button" class="btn btn-primary btn-sm" ng-click="vm.modalAddShop()">
-                Add shop <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.addingShop"></span>
-            </a>
-            <a type="button" class="btn btn-primary btn-sm" ng-click="vm.modalEditShop(vm.shops[vm.selectedShopId])">
-                Edit shop <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.editingShop"></span>
-            </a>
-            <a type="button" class="btn btn-primary btn-sm" ng-click="vm.modalDeleteShop(vm.selectedShopId)">
-                Delete shop <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.deletingShop"></span>
-            </a>
-        </div>
-    </div>
-     
     <form name="shoppingList" novalidate>
         <!-- ============================================ Ingredients ========== -->
         <div class="panel panel-default">
@@ -34,17 +20,40 @@
                                 ng-change="vm.setShop()"
                                 >
                         </select>
-                        <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.selectingShop"></span>
-                    </span>      
+                    </span>
 
-                   <button type="button" class="btn btn-primary btn-sm header-button" ng-click="vm.modalAddLocation()"> 
-                   +<span class="glyphicon glyphicon-tag header-button" ng-if="!vm.addingLocation"></span>
-                   <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.addingLocation"></span>
-                   </button>                   
-                </h3>                
+                    <button type="button" class="btn btn-secondary btn-sm small-button" ng-if="vm.showingShopEdits" ng-click="vm.showingShopEdits = !vm.showingShopEdits;"> 
+                            <span class="glyphicon glyphicon-eye-close"></span>
+                    </button>
+                     <button type="button" class="btn btn-secondary btn-sm small-button" ng-if="!vm.showingShopEdits" ng-click="vm.showingShopEdits = !vm.showingShopEdits;"> 
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                    </button>
+
+                    <button type="button" class="btn btn-primary btn-sm header-button" ng-click="vm.modalAddLocation()"> 
+                            + <span class="glyphicon glyphicon-tag" ng-if="!vm.addingLocation"></span>
+                            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.addingLocation"></span>
+                    </button>
+
+                </h3>
+            </div>
+            <!-- ============================== shop edit controls ======== -->
+            <div class="btn-group btn-group-justified" role="group" aria-label="..." ng-if="vm.showingShopEdits">
+                <a type="button" class="btn btn-primary btn-sm" ng-click="vm.modalAddShop()">
+                    Add shop <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.addingShop"></span>
+                </a>
+                <a type="button" class="btn btn-primary btn-sm" ng-click="vm.modalEditShop(vm.shops[vm.selectedShopId])">
+                    Edit shop <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.editingShop"></span>
+                </a>
+                <a type="button" class="btn btn-primary btn-sm" ng-click="vm.modalDeleteShop(vm.selectedShopId)" ng-disabled="vm.selectedShopId == null">
+                    Delete shop <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.deletingShop"></span>
+                </a>
             </div>
 
-            <div class="panel-body">   
+            <div class="panel-body" style="text-align:center;" ng-if="vm.selectingShop">
+                 <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ></span>
+            </div>
+            
+            <div class="panel-body" ng-if="!vm.selectingShop">   
               <!-- ============================== known location ======== -->
               <table class="table table-striped" ng-repeat="location in vm.getShopLocations(vm.selectedShopId) | orderBy : 'name'">
                 <tbody>
@@ -97,8 +106,7 @@
                     </td>        
                   </tr>
                 </tbody>
-              </table>                    
-            
+              </table>
             </div> 
         </div>
         <!-- =================================================================== -->   
