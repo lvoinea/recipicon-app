@@ -17,6 +17,7 @@
         vm.selectedShopId = null;
         vm.shops = {};
         vm.locations = {};
+        vm.getCheckedItems = {};
         
         vm.deleteItem = deleteItem;
         vm.addItem = addItem;
@@ -29,6 +30,7 @@
         vm.ingredientInLocation = ingredientInLocation;
         vm.ingredientInShop = ingredientInShop;
         vm.allIngredientsInLocation = allIngredientsInLocation;
+        vm.isItemChecked = isItemChecked;
         
         vm.modalAddLocation = modalAddLocation;
         vm.modalEditLocation = modalEditLocation;
@@ -78,6 +80,7 @@
                 vm.shoppingList = JSON.parse(JSON.stringify(shoppingList)); 
                 var allIngredients = _getAllIngredients(vm.shoppingList.items);
                 vm.listIngredients = _getUniqueIngredients(allIngredients);              
+                vm.getCheckedItems = DataService.getCheckedItems();
             })
             .catch(function(error){
                 AlertService.setAlert('ERROR: Could not load shopping list (code  ' + error.status + ').');
@@ -237,7 +240,17 @@
                 .finally(function(){
                     vm.creating = false;
                 });            
-        }        
+        }
+
+        function isItemChecked(ingredientId){
+            if (_.has(vm.getCheckedItems, ingredientId)){
+                return vm.getCheckedItems[ingredientId];
+            }
+            else{
+                return false;
+            }
+        }
+
         
         //---------------------------------------------- Shops 
         function setShop(){

@@ -184,6 +184,7 @@
         $rootScope.shops = null;            // List of user known shops (id, name)
         $rootScope.currentShop = null;      // Currently selected shops
         $rootScope.locations = null;        // List of locations (id, name, shopId)
+        $rootScope.checkedItems = null;     // List of checked items
         
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};

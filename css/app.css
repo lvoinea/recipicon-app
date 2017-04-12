@@ -45,8 +45,10 @@ button[disabled=disabled], button:disabled {
 
 .header-button {
     float: right;
-    margin: 0 !important;
-    padding: 2px !important;
+}
+
+.checked {
+    text-decoration: line-through;
 }
 
 .small-button {

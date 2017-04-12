@@ -34,7 +34,8 @@
             getShoppingList : getShoppingList,
             setShoppingList : setShoppingList,
             addShoppingListRecipe : addShoppingListRecipe,
-            removeShoppingListRecipe : removeShoppingListRecipe            
+            removeShoppingListRecipe : removeShoppingListRecipe,
+            getCheckedItems : getCheckedItems
         };
 
         //---------------------------------------------- Design patterns
@@ -309,12 +310,17 @@
                 deferred= $http.get($rootScope.service+'/shopping-list/'+id)
                     .then(function(response){
                         $rootScope.shoppingList = response.data;
+                        $rootScope.checkedItems = {};
                         return $rootScope.shoppingList;
                     });                   
             } else {               
                 deferred = $q.when($rootScope.shoppingList);                              
             }            
             return deferred;
+        }
+
+        function getCheckedItems(){
+            return  $rootScope.checkedItems;
         }
         
         function setShoppingList(shoppingList){
