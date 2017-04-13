@@ -22,10 +22,8 @@
     <form name="shoppingList" novalidate>
         <!-- ============================================ Recipes ===================================== -->
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">
-                   Recipes <small>(serves)</small>
-                </h3>
+            <div class="panel-heading panel-title">
+                Recipes <small>(serves)</small>
             </div>
             <div class="panel-body">
                 <ul>
@@ -40,10 +38,8 @@
         </div>
         <!-- ============================================ Ingredients ===================================== -->
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title">
-                   <form class="form-inline">
-                   Shop 
+            <div class="panel-heading panel-title">                
+                   Shop
                    <span ng-if="vm.getShops().length > 0">
                         <select 
                                 ng-model="vm.selectedShopId"                           
@@ -52,8 +48,6 @@
                                 >
                         </select>
                     </span>
-                   </form>
-                </div>
             </div>
 
             <div class="panel-body" style="text-align:center;" ng-if="vm.selectingShop">

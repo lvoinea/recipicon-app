@@ -16,8 +16,11 @@
             setRecipe: setRecipe,
             deleteRecipe: deleteRecipe,
             //-- Ingredient
+            RecipeIngredient : RecipeIngredient,
+            Item : Item,
             getIngredients : getIngredients,
             setIngredient : setIngredient,
+            getIngredient : getIngredient,
             //-- Shop
             Shop : Shop,
             getShops : getShops,
@@ -118,6 +121,25 @@
         }
         
         //----------------------------------------------  Ingredient
+        function Item(itemId, ingredientId, quantity, unit){
+            return  {
+                'id': '_'+ itemId,
+                'ingredient' : ingredientId,
+                'quantity' : quantity,
+                'unit' : unit,
+                'recipe' : null
+            }
+        }
+
+        function RecipeIngredient(itemId, ingredientId, quantity, unit){
+            return  {
+                'id': itemId,
+                'ingredient' : ingredientId,
+                'quantity' : quantity,
+                'unit' : unit 
+            }
+        }
+        
         function getIngredients(){
             var deferred;
             
@@ -141,6 +163,25 @@
             .then(function(response) {
                 return response.data;
             });
+        }
+
+        function getIngredient(ingredientName){
+            var deferred;
+            
+            var ingredient = _.find(_.values($rootScope.ingredients),function(o){
+                return o.name == ingredientName});
+
+            if (ingredient == null) {
+                deferred = $http.put($rootScope.service+'/ingredientbyname/'+ingredientName)
+                .then(function(response) {
+                    ingredient = response.data;
+                    $rootScope.ingredients[ingredient.id] = ingredient;
+                    return ingredient;
+                });     
+            } else {                
+                deferred = $q.when(ingredient);                              
+            }            
+            return deferred; 
         }
         
         //---------------------------------------------- Shop

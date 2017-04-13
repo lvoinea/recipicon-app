@@ -21,6 +21,7 @@
         
         vm.deleteItem = deleteItem;
         vm.addItem = addItem;
+        vm.getIngredientNames = getIngredientNames;
         vm.getShops = getShops;
         vm.setShop = setShop;
         vm.getShopLocations = getShopLocations;
@@ -55,6 +56,7 @@
         vm.loading.ingredients = false;
         vm.isLoading = isLoading;
         
+        vm.addingItem = null;
         vm.editingLocation = null;
         vm.addingLocation = false;
         vm.settingLocation = false;
@@ -190,8 +192,9 @@
                 quantity = '';
                 _.forEach(_.keys(mapIngredients[ingredientId]), function(unit) {
                     if (unit != 'name'){
-                        mapIngredients[ingredientId][unit] = mapIngredients[ingredientId][unit].reduce((a, b) => a + b, 0);                    
-                        quantity = quantity + mapIngredients[ingredientId][unit] + ' ' + unit + ' + ';
+                        mapIngredients[ingredientId][unit] = mapIngredients[ingredientId][unit].reduce((a, b) => a + b, 0);
+                        var roundedQunatity = Math.round(mapIngredients[ingredientId][unit] * 10) / 10;
+                        quantity = quantity + roundedQunatity + ' ' + unit + ' + ';
                     }
                  }); 
                  quantity = quantity.substring(0, quantity.length - 3);
@@ -232,7 +235,7 @@
             var shoppingList = {'id':'_','items':[]}
             DataService.setShoppingList(shoppingList)
                 .then(function(shoppingList){
-                    $state.go('shopping-list',{'id' : '_'}); 
+                    $state.go('shopping-list',{'id' : '_'},{reload: true}); 
                 })
                 .catch(function(error){
                     AlertService.setAlert('ERROR: Could not create new shopping list (code ' + error.status + ').');
@@ -560,24 +563,35 @@
             }
         }
         
+        function getIngredientNames(){
+            var result = _.values(vm.ingredients);
+            result = _.map(result, function(o){return o.name});
+            return result;
+        }
+        
         function addItem(focusField){
-            if ((vm.ingredient != null) && (vm.quantity != null)) {
-                var matches = vm.quantity.match(vm.regex);
-                var amount = matches[1].replace(",", ".");
-                var unit = matches[2];
-                vm.shoppingList.items.push(
-                // new shopping list ingredient 
-                {
-                    'id': '_'+ vm.localId,
-                    'ingredient' : vm.ingredient,
-                    'quantity' : amount,
-                    'unit' : unit,
-                    'recipe' : null
+
+            if ((vm.ingredient != null) && (vm.quantity != null)) {                
+                vm.addingItem = true;
+                DataService.getIngredient(vm.ingredient)
+                .then(function(ingredient){
+                    
+                    var matches = vm.quantity.match(vm.regex);
+                    var amount = matches[1].replace(",", ".");
+                    var unit = matches[2];
+
+                    vm.shoppingList.items.push(DataService.Item(vm.localId,ingredient.id,amount,unit));
+                    vm.localId++;
+                    vm.ingredient = null;
+                    vm.quantity = null;
+                    angular.element('#'+focusField).focus();
                 })
-                vm.localId++;
-                vm.ingredient = null;
-                vm.quantity = null;
-                angular.element('#'+focusField).focus();
+                .catch(function(error){
+                    AlertService.setAlert('ERROR: Could not retrieve ingredient (code  ' + error.status + ').');
+                })
+                .finally(function(){
+                    vm.addingItem = null;
+                });
             }
         }
     };

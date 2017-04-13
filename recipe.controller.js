@@ -141,78 +141,27 @@
         
         function addRecipeIngredient(focusField){
             if ((vm.ingredient != null) && (vm.quantity != null)) {                
-                var matches = vm.quantity.match(vm.regex);
-                var amount = matches[1].replace(",", ".");
-                var unit = matches[2];
                 
-                //lookup or create ingredient
-                var ingredientId = _.find(_.values(vm.ingredients),
-                    function(ingredient) { return (ingredient.name == vm.ingredient); }
-                );
-                if (!ingredientId) {
-                    vm.adding = true;
-                    ingredientId = _getLocalId();
-                    var ingredient = {
-                        'id' : ingredientId,
-                        'name' : vm.ingredient,
-                        'locations':[]
-                    }
-                    vm.ingredients[ingredientId] = ingredient;
-                    DataService.setIngredient(ingredient)
-                    .then(function(newIngredient){
-                        _updateRecipeIngredient(newIngredient, ingredient);
-                        _updateIngredient(newIngredient, ingredient);                        
-                    })
-                    .catch(function(error){
-                        AlertService.setAlert('ERROR: Could not add ingredient  (code ' + error.status + ').');
-                        _deleteRecipeIngredient(ingredientId);
-                        delete  vm.ingredients[ingredientId];
-                    })
-                    .finally(function(){
-                        vm.adding = false;
-                    });  
-                } 
-                else {
-                    ingredientId = ingredientId.id;
-                }                
-              
-                //add recipe ingredient relation
-                vm.recipe.recipe_ingredients.push(
-                {
-                    'id': _getLocalId(),
-                    'ingredient' : ingredientId,
-                    'quantity' : amount,
-                    'unit' : unit        
-                })
+                vm.adding = true;
+                DataService.getIngredient(vm.ingredient)
+                .then(function(ingredient){
+                    
+                    var matches = vm.quantity.match(vm.regex);
+                    var amount = matches[1].replace(",", ".");
+                    var unit = matches[2];
 
-                //clear view fields
-                vm.ingredient = null;
-                vm.quantity = null;
-                angular.element('#'+focusField).focus();
+                    vm.recipe.recipe_ingredients.push(DataService.RecipeIngredient(_getLocalId(),ingredient.id,amount,unit));
+                    vm.ingredient = null;
+                    vm.quantity = null;
+                    angular.element('#'+focusField).focus();
+                })
+                .catch(function(error){
+                    AlertService.setAlert('ERROR: Could not add ingredient (code  ' + error.status + ').');
+                })
+                .finally(function(){
+                    vm.adding = null;
+                });
             }
-        }
-        
-        function _updateIngredient(newIngredient, oldIngredient){
-            vm.ingredients[newIngredient.id] = newIngredient;
-            delete  vm.ingredients[oldIngredient.id];           
-        }
-        
-        function _updateRecipeIngredient(newIngredient, oldIngredient){
-            var recipeIngredient = _.find(vm.recipe.recipe_ingredients,
-                function(ingredient) { return (ingredient.ingredient == oldIngredient.id); }
-            );
-            if(recipeIngredient){
-                recipeIngredient.ingredient = newIngredient.id;
-            }     
-        }
-        
-        function _deleteRecipeIngredient(ingredientId){
-            var iItem = vm.recipe.recipe_ingredients.findIndex(
-                function(item){ return item.ingredient == ingredientId}
-                );
-            if (iItem >= 0) {
-                 vm.recipe.recipe_ingredients.splice(iItem,1);
-            } 
         }
         
         //---------------------------------------------- Shopping list

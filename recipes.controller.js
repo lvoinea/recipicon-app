@@ -11,7 +11,6 @@
         vm.recipes = [];
         
         vm.getRecipes = getRecipes;
-        
         vm.selectRecipe = selectRecipe;
         vm.edit = edit;
         
