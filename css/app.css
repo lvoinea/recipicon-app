@@ -42,3 +42,31 @@ button[disabled=disabled], button:disabled {
    padding: 0 !important;
    margin: 0 !important;
 }
+
+.header-button {
+    float: right;
+}
+
+.checked {
+    text-decoration: line-through;
+}
+
+.small-button {
+    margin: 0 !important;
+    padding: 2px !important;
+}
+
+.modal.ng-enter {
+  transition: opacity .5s ease-out;
+  opacity: 0;
+}
+.modal.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+.modal.ng-leave {
+  transition: opacity .5s ease-out;
+  opacity: 1;
+}
+.modal.ng-leave.ng-leave-active {
+  opacity: 0;
+}

@@ -1,7 +1,7 @@
-<div class="row" style="text-align:center;" ng-if="vm.loading">   
+<div class="row" style="text-align:center;" ng-if="vm.isLoading()">   
     <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading ...
 </div>
-<div ng-if="!vm.loading">
+<div ng-if="!vm.isLoading()">
     <h3 class="text-center">
         {{vm.recipe.name}} </br>
         <small ng-if="vm.recipe.in_shopping_list">( in shopping list )</small>
@@ -48,7 +48,7 @@
         <div class="panel-body">
             <ul>
                 <li ng-repeat="ingredient in vm.recipe.recipe_ingredients">
-                    {{ingredient.ingredient}} ( {{ingredient.quantity}} {{ingredient.unit}} )
+                    {{vm.ingredients[ingredient.ingredient].name}} ( {{ingredient.quantity}} {{ingredient.unit}} )
                 </li> 
             </ul>
         </div>

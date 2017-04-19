@@ -4,7 +4,7 @@
 <div ng-if="!vm.loading">
     <h3 class="text-center">Recipe list</h3>
     <div class="panel text-center">
-        <button type="button" class="btn btn-primary" ng-click="vm.edit()">
+        <button type="button" class="btn btn-primary btn-sm" ng-click="vm.edit()">
             <span class="glyphicon glyphicon-pencil"></span>
             Add recipe
         </button>
@@ -48,9 +48,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="recipe in vm.recipes | filter:{name:vm.nameFilter, category:vm.categoryFilter} | orderBy: 'duration'">
-                    <td style="text-align:center"><input type="checkbox" ng-model="recipe.in_shopping_list" ng-change="vm.selectRecipe(recipe)"/></td>
-                    <td><a ui-sref="recipe({id:'{{recipe.id}}'})">{{recipe.name}}</a></td>
+                <tr ng-repeat="recipe in vm.getRecipes() | filter:{name:vm.nameFilter, category:vm.categoryFilter} | orderBy: 'duration'">
+                    <td style="text-align:center">
+                        <input type="checkbox" ng-model="recipe.in_shopping_list" ng-change="vm.selectRecipe(recipe)" ng-if="vm.selecting != recipe.id"/>
+                        <small><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.selecting == recipe.id"></span><small>
+                    </td>
+                    <td><a ui-sref="recipe({id:'{{recipe.id}}'})">{{recipe.name != "" ? recipe.name : "?"}}</a></td>
                     <td>{{recipe.category}}</td>
                     <td>{{recipe.duration}} min</td>
                 </tr>
@@ -58,7 +61,7 @@
         </table>
     </div>
     <div class="panel text-center">
-        <button type="button" class="btn btn-primary" ng-click="vm.edit()">
+        <button type="button" class="btn btn-primary btn-sm" ng-click="vm.edit()">
             <span class="glyphicon glyphicon-pencil"></span>
             Add recipe
         </button>

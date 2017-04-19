@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app', ['ui.router', 'ngCookies', 'ui.bootstrap'])
+        .module('app', ['ui.router', 'ngCookies', 'ui.bootstrap','angularModalService'])
         .config(config)
         .run(run);
 
@@ -22,7 +22,7 @@
                     },
                     "r-body": {
                         controller: 'RecipesController',
-                        templateUrl: 'recipes.view.html',
+                        templateUrl: 'recipeList.html',
                         controllerAs: 'vm'
                     }
                 }
@@ -31,9 +31,6 @@
             
             .state('recipe', {
                 url: '/recipe/:id',
-                params: {
-                    recipe: null,
-                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
@@ -45,7 +42,7 @@
                     },
                     "r-body": {
                         controller: 'RecipeController',
-                        templateUrl: 'recipe.view.html',
+                        templateUrl: 'recipe.html',
                         controllerAs: 'vm'
                     }
                 }
@@ -54,9 +51,6 @@
             
             .state('recipe-edit', {
                 url: '/recipe-edit/:id',
-                params: {
-                    recipe: null,
-                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
@@ -68,7 +62,7 @@
                     },
                     "r-body": {
                         controller: 'RecipeController',
-                        templateUrl: 'recipe.edit.view.html',
+                        templateUrl: 'recipe.edit.html',
                         controllerAs: 'vm'
                     }
                 }
@@ -77,9 +71,6 @@
             
             .state('shopping-list', {
                 url: '/shopping-list/:id',
-                params: {
-                    shoppingList: null,
-                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
@@ -91,7 +82,7 @@
                     },
                     "r-body": {
                         controller: 'ShoppingListController',
-                        templateUrl: 'shoppingList.view.html',
+                        templateUrl: 'shoppingList.html',
                         controllerAs: 'vm'
                     }
                 }               
@@ -99,9 +90,6 @@
             
             .state('shopping-list-edit', {
                 url: '/shopping-list-edit/:id',
-                params: {
-                    shoppingList: null,
-                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
@@ -113,7 +101,26 @@
                     },
                     "r-body": {
                         controller: 'ShoppingListController',
-                        templateUrl: 'shoppingList.edit.view.html',
+                        templateUrl: 'shoppingList.edit.html',
+                        controllerAs: 'vm'
+                    }
+                }               
+            })
+            
+            .state('shopping-list-organize', {
+                url: '/shopping-list-organize/:id',
+                views : {
+                    "r-header": {
+                        templateUrl: "header.html",
+                        params: {
+                            selection: 'shopping-list'
+                        },
+                        controller: 'HeaderController',
+                        controllerAs: 'vm'
+                    },
+                    "r-body": {
+                        controller: 'ShoppingListController',
+                        templateUrl: 'shoppingList.organize.html',
                         controllerAs: 'vm'
                     }
                 }               
@@ -125,7 +132,7 @@
                     "r-header": {},
                     "r-body": {
                         controller: 'LoginController',
-                        templateUrl: 'login.view.html',
+                        templateUrl: 'authLogin.html',
                         controllerAs: 'vm'
                     }
                 } 
@@ -138,7 +145,7 @@
                     "r-header": {},
                     "r-body": {
                         controller: 'LogoutController',
-                        templateUrl: 'logout.view.html',
+                        templateUrl: 'authLogout.html',
                         controllerAs: 'vm'
                     }
                 } 
@@ -151,7 +158,7 @@
                     "r-header": {},
                     "r-body": {
                         controller: 'RegisterController',
-                        templateUrl: 'register.view.html',
+                        templateUrl: 'authRegister.html',
                         controllerAs: 'vm'
                     }
                 }                
@@ -170,6 +177,15 @@
         
         //Configure service path
         $rootScope.service = '/api';
+        //$rootScope.service = '/service/api';
+        $rootScope.recipes = null;          // The list of known recipes
+        $rootScope.recipe = null;           // Currently selected entitites
+        $rootScope.ingredients = null;      // List of user known ingredients (id,name, [locationId])
+        $rootScope.shoppingList = null;     // Currently selected shopping list
+        $rootScope.shops = null;            // List of user known shops (id, name)
+        $rootScope.currentShop = null;      // Currently selected shops
+        $rootScope.locations = null;        // List of locations (id, name, shopId)
+        $rootScope.checkedItems = null;     // List of checked items
         
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};
