@@ -22,7 +22,7 @@
                     },
                     "r-body": {
                         controller: 'RecipesController',
-                        templateUrl: 'recipes.view.html',
+                        templateUrl: 'recipeList.html',
                         controllerAs: 'vm'
                     }
                 }
@@ -42,7 +42,7 @@
                     },
                     "r-body": {
                         controller: 'RecipeController',
-                        templateUrl: 'recipe.view.html',
+                        templateUrl: 'recipe.html',
                         controllerAs: 'vm'
                     }
                 }
@@ -62,7 +62,7 @@
                     },
                     "r-body": {
                         controller: 'RecipeController',
-                        templateUrl: 'recipe.edit.view.html',
+                        templateUrl: 'recipe.edit.html',
                         controllerAs: 'vm'
                     }
                 }
@@ -82,7 +82,7 @@
                     },
                     "r-body": {
                         controller: 'ShoppingListController',
-                        templateUrl: 'shoppingList.view.html',
+                        templateUrl: 'shoppingList.html',
                         controllerAs: 'vm'
                     }
                 }               
@@ -101,7 +101,7 @@
                     },
                     "r-body": {
                         controller: 'ShoppingListController',
-                        templateUrl: 'shoppingList.edit.view.html',
+                        templateUrl: 'shoppingList.edit.html',
                         controllerAs: 'vm'
                     }
                 }               
@@ -120,7 +120,7 @@
                     },
                     "r-body": {
                         controller: 'ShoppingListController',
-                        templateUrl: 'shoppingList.organize.view.html',
+                        templateUrl: 'shoppingList.organize.html',
                         controllerAs: 'vm'
                     }
                 }               
@@ -132,7 +132,7 @@
                     "r-header": {},
                     "r-body": {
                         controller: 'LoginController',
-                        templateUrl: 'login.view.html',
+                        templateUrl: 'authLogin.html',
                         controllerAs: 'vm'
                     }
                 } 
@@ -145,7 +145,7 @@
                     "r-header": {},
                     "r-body": {
                         controller: 'LogoutController',
-                        templateUrl: 'logout.view.html',
+                        templateUrl: 'authLogout.html',
                         controllerAs: 'vm'
                     }
                 } 
@@ -158,7 +158,7 @@
                     "r-header": {},
                     "r-body": {
                         controller: 'RegisterController',
-                        templateUrl: 'register.view.html',
+                        templateUrl: 'authRegister.html',
                         controllerAs: 'vm'
                     }
                 }                

@@ -104,9 +104,7 @@
             return $http.post($rootScope.service+'/recipe/'+recipe.id, recipe)
             .then(function(response){
                 $rootScope.recipe = response.data;
-                if (recipe.id == "_"){
-                    $rootScope.recipes[$rootScope.recipe.id] = $rootScope.recipe;
-                }                
+                $rootScope.recipes[$rootScope.recipe.id] = $rootScope.recipe;              
                 return $rootScope.recipe;
             });                            
         }
@@ -367,6 +365,7 @@
         function setShoppingList(shoppingList){
             return $http.post($rootScope.service+'/shopping-list/'+shoppingList.id, shoppingList)
                 .then(function(response){
+                        $rootScope.recipes = null;
                         $rootScope.shoppingList = response.data;
                         return $rootScope.shoppingList;
                 });   

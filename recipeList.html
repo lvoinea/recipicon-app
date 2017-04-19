@@ -53,7 +53,7 @@
                         <input type="checkbox" ng-model="recipe.in_shopping_list" ng-change="vm.selectRecipe(recipe)" ng-if="vm.selecting != recipe.id"/>
                         <small><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.selecting == recipe.id"></span><small>
                     </td>
-                    <td><a ui-sref="recipe({id:'{{recipe.id}}'})">{{recipe.name}}</a></td>
+                    <td><a ui-sref="recipe({id:'{{recipe.id}}'})">{{recipe.name != "" ? recipe.name : "?"}}</a></td>
                     <td>{{recipe.category}}</td>
                     <td>{{recipe.duration}} min</td>
                 </tr>
