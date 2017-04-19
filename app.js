@@ -177,6 +177,7 @@
         
         //Configure service path
         $rootScope.service = '/api';
+        //$rootScope.service = '/service/api';
         $rootScope.recipes = null;          // The list of known recipes
         $rootScope.recipe = null;           // Currently selected entitites
         $rootScope.ingredients = null;      // List of user known ingredients (id,name, [locationId])
