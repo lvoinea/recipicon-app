@@ -9,6 +9,7 @@
 
     function DataService($http, $log, $q, $rootScope) {
         return {
+            initialize : initialize,
             //-- Recipe
             Recipe : Recipe,
             getRecipes: getRecipes,
@@ -45,6 +46,18 @@
         // Objects are created outside the service and passed to the service
         // Service caches the objects it receives and passes references to it
         
+        //---------------------------------------------- Init
+        function initialize(){
+            $rootScope.recipes = null;          // The list of known recipes
+            $rootScope.recipe = null;           // Currently selected entitites
+            $rootScope.ingredients = null;      // List of user known ingredients (id,name, [locationId])
+            $rootScope.shoppingList = null;     // Currently selected shopping list
+            $rootScope.shops = null;            // List of user known shops (id, name)
+            $rootScope.currentShop = null;      // Currently selected shops
+            $rootScope.locations = null;        // List of locations (id, name, shopId)
+            $rootScope.checkedItems = null;     // List of checked items
+        }
+        
         //---------------------------------------------- Recipe
         function Recipe(){
             return {
@@ -55,7 +68,8 @@
                 'serves' : 2,
                 'duration' : 30,
                 'recipe_ingredients' : [],
-                'in_shopping_list' : false
+                'in_shopping_list' : false,
+                'image': null
             }
         }
         

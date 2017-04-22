@@ -5,8 +5,8 @@
         .module('app')
         .controller('LogoutController', LogoutController);
 
-    LogoutController.$inject = ['$location', 'AuthenticationService', 'AlertService'];
-    function LogoutController($location, AuthenticationService, AlertService) {
+    LogoutController.$inject = ['$rootScope','$location', 'AuthenticationService', 'AlertService', 'DataService'];
+    function LogoutController($rootScope, $location, AuthenticationService, AlertService, DataService) {
         var vm = this;
         
         vm.dataLoading = false;
@@ -18,6 +18,8 @@
         logout();
 
         function logout() {
+
+            DataService.initialize();
             
             // reset login status
             vm.dataLoading = true;

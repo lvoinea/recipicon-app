@@ -3,9 +3,9 @@
     
     angular.module('app').controller('RecipeController', RecipeController);
     
-    RecipeController.$inject = ['DataService', '$log', '$state', '$stateParams','$q','AlertService'];
+    RecipeController.$inject = ['DataService', '$log', '$state', '$stateParams','$q','AlertService','Upload'];
 
-    function RecipeController(DataService, $log, $state, $stateParams, $q, AlertService){
+    function RecipeController(DataService, $log, $state, $stateParams, $q, AlertService, Upload){
         var vm = this;
         
         vm.localId = 0;
@@ -14,6 +14,7 @@
         vm.recipe = null;
         vm.recipeDescription = null;
         vm.ingredients = {};
+        vm.file = null;
         
         vm.deleteRecipeIngredient = deleteRecipeIngredient;
         vm.addRecipeIngredient = addRecipeIngredient;
@@ -24,9 +25,11 @@
         vm.remove = remove;   
         vm.addToBasket = addToBasket;
         vm.removeFromBasket = removeFromBasket;
+        vm.setImage = setImage;
         
         vm.loading = {};
         vm.loading.recipe = false;
+        vm.loading.recipeList = false;
         vm.loading.ingredients = false;
         vm.isLoading = isLoading;
         
@@ -34,6 +37,7 @@
         vm.deleting = false; 
         vm.selecting = false;
         vm.adding = false;
+        vm.settingImage = false;
         
         function _getLocalId(){
             vm.localId++;
@@ -58,6 +62,17 @@
             .finally(function(){
                  vm.loading.recipe = false;   
             }); 
+
+            //-------------------------- load recipe list
+             DataService.getRecipes()
+            .then(function(recipes) {
+            })
+            .catch(function(error){
+                $log.error('Could not load recipe list');
+            })
+            .finally(function(){
+                vm.loading.recipeList = false;
+            });
             
             //--------------------------- load ingredients
             DataService.getIngredients()
@@ -123,6 +138,17 @@
                 .finally(function(){
                     vm.deleting = false;
                 });        
+        }
+
+        function setImage(){
+            vm.settingImage = true;
+            Upload.base64DataUrl(vm.file)
+            .then(function(url){
+                vm.recipe.image = url;
+            })
+            .finally(function(){
+                vm.settingImage = false;
+            });
         }
    
         //---------------------------------------------- Ingredients

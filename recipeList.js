@@ -31,7 +31,7 @@
                     vm.recipes = recipes;
                 })
                 .catch(function(error){
-                    $log.error('Could not load recipes');
+                    $log.error('Could not load recipe list');
                 })
                 .finally(function(){
                     vm.loading = false;
