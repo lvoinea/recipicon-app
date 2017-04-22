@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app', ['ui.router', 'ngCookies', 'ui.bootstrap','angularModalService'])
+        .module('app', ['ui.router', 'ngCookies', 'ui.bootstrap','angularModalService','ngFileUpload'])
         .config(config)
         .run(run);
 

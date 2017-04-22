@@ -6,6 +6,26 @@
         {{vm.recipe.name}}</br>
         <small>- edit recipe -</small> 
     </h3>
+    <form ng-app="fileUpload" name="form">
+    <div class="row" style="text-align:center;" ng-if="vm.settingImage">   
+        <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading ...
+    </div>
+    <div class="panel panel-default button" style="text-align:center;" 
+        ngf-select ng-model="vm.file" 
+        name="file" 
+        ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-max-size="4MB" ngf-min-height="100"
+        ngf-change="vm.setImage()"
+        ng-if="!vm.settingImage">
+       <!--
+       <span ng-if="vm.file.$error || !vm.file">Select an image</span>
+       <img class="img-responsive" ngf-src="!vm.file.$error && vm.file">
+       -->
+
+       <span ng-if="(vm.file.$error || !vm.file) && !vm.recipe.image">Select an image</span>
+       <img class="center-block img-responsive" ngf-src="vm.recipe.image">
+    </div>
+
+    </form>
     <form name="recipe" novalidate>
         <!-- ============================================ Recipe ===================================== -->
         <div class="panel panel-default">
