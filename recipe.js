@@ -142,9 +142,21 @@
 
         function setImage(){
             vm.settingImage = true;
-            Upload.base64DataUrl(vm.file)
-            .then(function(url){
-                vm.recipe.image = url;
+
+            Upload.imageDimensions(vm.file)
+            .then(function(dimensions){
+                var ratio = dimensions.width / dimensions.height;
+                $log.info(ratio, dimensions.width);
+
+                Upload.resize(vm.file, {width: 640, height: 640 / ratio, quality: .8, type: 'image/jpeg'})
+                .then(function(resizedFile){
+                    $log.info(resizedFile);
+
+                    Upload.base64DataUrl(vm.file)
+                    .then(function(url){
+                        vm.recipe.image = url;
+                    })
+                });
             })
             .finally(function(){
                 vm.settingImage = false;
