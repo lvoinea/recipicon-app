@@ -91,9 +91,6 @@
 
             var width = 250,
                 barHeight = 20;
-            
-            var color = d3.scaleOrdinal()
-                .range(colors);
 
             var x = d3.scaleLinear()
                 .domain([0,d3.max(data, function(d){return d.recipes})])
@@ -125,7 +122,6 @@
                 .attr("y", barHeight / 2)
                 .attr("dy", ".35em")
                 .text(function(d) { return d.ingredient; })
-
             
             bar.append("text")
                 .attr("x", width - 3)
@@ -133,44 +129,6 @@
                 .attr("dy", ".35em")
                 .attr("style", "text-anchor: end")
                 .text(function(d) { return d.recipes; });
-
-
-            
-            /*
-            var arc = d3.arc()
-                .outerRadius(radius - 10)
-                .innerRadius(radius - 70);
-
-            var pie = d3.pie()
-                .value(function(d) { return d.recipes; });
-
-            var svg = d3.select(elementPath).append("svg")
-                .attr("width", width)
-                .attr("height", height)
-              .append("g")
-                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-                
-            var g = svg.selectAll(".arc")
-              .data(pie(data))
-            .enter().append("g")
-              .attr("class", "arc");
-
-              g.append("path")
-                  .attr("d", arc)
-                  .style("fill", function(d) { return color(d.data.ingredient); });
-
-              g.append("text")
-                  .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-                  .attr("dy", ".35em")
-                  .attr("font-family", "sans-serif")
-                  .style("font-size", "15px")
-                  .text(function(d) { return d.data.ingredient; });
- 
-              g.append("text")
-                  .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-                  .attr("dy", "1.75em")
-                  .text(function(d) { return "(" + d.data.recipes + ")"; });
-                  */
         }
         
     };
