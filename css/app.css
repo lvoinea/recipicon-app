@@ -70,3 +70,12 @@ button[disabled=disabled], button:disabled {
 .modal.ng-leave.ng-leave-active {
   opacity: 0;
 }
+
+.arc text {
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.arc path {
+  stroke: #fff;
+}

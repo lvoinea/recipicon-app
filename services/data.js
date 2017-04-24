@@ -39,7 +39,9 @@
             setShoppingList : setShoppingList,
             addShoppingListRecipe : addShoppingListRecipe,
             removeShoppingListRecipe : removeShoppingListRecipe,
-            getCheckedItems : getCheckedItems
+            getCheckedItems : getCheckedItems,
+            //-- Statistics
+            getStats : getStats
         };
 
         //---------------------------------------------- Design patterns
@@ -86,9 +88,9 @@
                     return $rootScope.recipes;
                 });             
             } else {                
-                deferred = $q.when($rootScope.recipes);                              
+                deferred = $q.when($rootScope.recipes);
             }            
-            return deferred;              
+            return deferred;
         }        
        
         function getRecipe(id) {           
@@ -410,6 +412,17 @@
                 }
             });
         }
-        
+        //--------------------------------------------- Statistics
+        function getStats(){
+            var deferred;
+            
+            deferred = $http.get($rootScope.service+'/stats')
+            .then(function(response) {
+                return response.data;
+            });
+            
+            return deferred; 
+        }
+
     }
 })();

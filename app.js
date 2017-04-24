@@ -126,6 +126,26 @@
                 }               
             })
 
+             .state('statistics', {
+                url: '/statistics',
+                views : {
+                    "r-header": {
+                        templateUrl: "header.html",
+                        params: {
+                            selection: 'recipe'
+                        },
+                        controller: 'HeaderController',
+                        controllerAs: 'vm'
+                    },
+                    "r-body": {
+                        controller: 'StatsController',
+                        templateUrl: 'statistics.html',
+                        controllerAs: 'vm'
+                    }
+                }
+                
+            })
+
             .state('login', {
                 url: '/login',
                 views : {
@@ -176,7 +196,8 @@
     function run($rootScope, $location, $cookieStore, $http) {
 
         //Configure service path
-        if (window.location.host == '127.0.0.1'){
+        var host = window.location.host;
+        if (host.startsWith("127.") || host.startsWith("192.")){
             $rootScope.service = '/api';            
         } 
         else {
