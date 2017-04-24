@@ -1,9 +1,28 @@
 <div class="row" style="text-align:center;" ng-if="vm.loading">   
     <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading ...
 </div>
-<div class="row" style="text-align:center;" ng-if="!vm.loading">
-   <h3>Number of recipes: {{vm.numberRecipes}}</h3>
+
+<div class="panel panel-default" ng-if="!vm.loading">
+    <div class = "panel-heading">
+    <h3 class="panel-title">
+        Number of recipes: {{vm.numberRecipes}}
+    </h3>
+    </div>
 </div>
+
 <div class="row" style="text-align:center;">
     <div id="recipeStatPanel"></div>
 </div>
+
+<div class="panel panel-default" ng-if="!vm.loading">
+    <div class = "panel-heading">
+    <h3 class="panel-title">
+        Number of ingredients: {{vm.numberIngredients}}
+    </h3>
+    </div>
+</div>
+
+<div class="row" style="text-align:center;">
+    <div id="ingredientsStatPanel"></div>
+</div>
+
