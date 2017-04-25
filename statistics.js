@@ -7,7 +7,7 @@
 
     function StatsController(DataService,$log){
         var vm = this;
-        var colors = ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99','#b15928'];
+        var colors = ['#8dd3c7','#ffffb3','#bebada','#fb8072','#80b1d3','#fdb462','#b3de69'];
         
         vm.stats = null;
         vm.numberRecipes = null;
@@ -85,6 +85,7 @@
         function showIngredients(elementPath){
 
             var data = vm.stats.ingredients
+                        .filter(function(d) { return d.recipes > 0 }) 
                         .sort(function(a, b) { 
                             return d3.descending(a.recipes, b.recipes); 
                         });
@@ -99,7 +100,30 @@
             var chart =  d3.select(elementPath).append("svg")
                 .attr("width", width)
                 .attr("height", barHeight * data.length);
+            
+            //---------- header
+            chart.append("g")
+                .append("rect")
+                .attr("width", width)
+                .attr("height", barHeight - 1)
+                .attr("fill", "steelblue" );
 
+            chart.append("text")
+                .attr("x", 3)
+                .attr("y", barHeight / 2)
+                .attr("dy", ".35em")
+                .attr("fill", "white" )
+                .text("ingredient");
+
+            chart.append("text")
+                .attr("x", width - 3)
+                .attr("y", barHeight / 2)
+                .attr("dy", ".35em")
+                .attr("style", "text-anchor: end")
+                .attr("fill", "white" )
+                .text("#recipes");
+            
+            //----------- ingredients
             var bar = chart.selectAll("g")
                 .data(data)
             .enter().append("g")
@@ -108,14 +132,14 @@
             bar.append("rect")
                 .attr("width", function(d) { return x(d.recipes); })
                 .attr("height", barHeight - 1)
-                .attr("fill", "steelblue" );
+                .attr("fill", "#a6cee3" );
 
             bar.append("line")
                 .attr("x1",0)
                 .attr("y1", barHeight - 1)
                 .attr("x2", width)
                 .attr("y2", barHeight - 1)
-                .attr("stroke", "steelblue" );
+                .attr("stroke", "#80b1d3" );
 
             bar.append("text")
                 .attr("x", 3)
