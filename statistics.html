@@ -5,9 +5,13 @@
 <div class="panel panel-default" ng-if="!vm.loading">
     <div class = "panel-heading">
     <h3 class="panel-title">
-        Number of recipes: {{vm.numberRecipes}}
+       Recipes: {{vm.numberRecipes}}
     </h3>
     </div>
+</div>
+
+<div style="text-align:center;" ng-if="!vm.loading">
+    <em> per category </em>
 </div>
 
 <div class="row" style="text-align:center;">
@@ -17,9 +21,13 @@
 <div class="panel panel-default" ng-if="!vm.loading">
     <div class = "panel-heading">
     <h3 class="panel-title">
-        Number of ingredients: {{vm.numberIngredients}}
+        Ingredients: {{vm.numberIngredients}}
     </h3>
     </div>
+</div>
+
+<div style="text-align:center;" ng-if="!vm.loading">
+    <p><em> ranking on number of recipes </em></p>
 </div>
 
 <div class="row" style="text-align:center;">
