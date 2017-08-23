@@ -3,7 +3,7 @@
         <h2>Recipicon</h2>
         <img class="img-responsive" src="img/recepicon_s.png" alt="Recipicon" />     
         <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="vm.clearAlert($index)">{{alert.msg}}</div>        
-        <form name="form" ng-submit="vm.login()" role="form">
+        <form name="form" ng-submit="" role="form">
             <div class="form-group" ng-class="{ 'has-error': form.username.$dirty && form.username.$error.required }">
                 <label for="username">Email</label>
                 <input type="text" autocorrect="off" autocapitalize="none" name="username" id="username" class="form-control" ng-model="vm.username" required />
@@ -11,11 +11,34 @@
             </div>
             <div class="form-group" ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" class="form-control" ng-model="vm.password" required />
-                <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
+                <input type="password" name="password" id="password" class="form-control" ng-model="vm.password" required/>
+                <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>                
+            </div>
+            <div class="form-group" ng-class="{ 'has-error': (form.confirm_password.$dirty && form.confirm_password.$error.required) || (vm.password != vm.confirmPassword) }" ng-show="!vm.toggleLogin">
+                <label for="confirm_password">Confirm password</label>
+                <input type="password" name="confirm_password" id="confirm_password" class="form-control" ng-model="vm.confirmPassword" ng-minlength="vm.minPasswordLength"/>
+                <span ng-show="vm.password!=vm.confirmPassword" class="help-block">Passwords should be identical.</span>
+                <span ng-show="form.confirm_password.$dirty && !form.confirm_password.$valid" class="help-block">Password should be at least {{vm.minPasswordLength}} characters</span>                
             </div>
             <div class="form-actions">
-                <button type="submit" ng-disabled="form.$invalid || vm.dataLoading" class="btn btn-primary" ng-click="">Login <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.dataLoading"></button>                
+                <table width="100%">
+                    <tr ng-show="vm.toggleLogin">
+                        <td>
+                            <button ng-disabled="form.$invalid || vm.dataLoading" class="btn btn-primary" ng-click="vm.login()">Login <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.dataLoading"></button>
+                        </td>
+                        <td align="right">
+                            No account yet? <a ng-click="vm.toggle()">Sign-up!</a>
+                        </td>
+                    </tr>
+                    <tr ng-show="!vm.toggleLogin">
+                        <td>
+                            <button ng-disabled="form.$invalid || vm.dataLoading" class="btn btn-primary" ng-click="vm.signup()">Sign-up <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.dataLoading"></button>
+                        </td>
+                        <td align="right">
+                            Already have an account? <a ng-click="vm.toggle()">Login!</a>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </form>
     </div>

@@ -11,19 +11,39 @@
 
         service.login = login;
         service.logout = logout;
+        service.signup = signup;
+        service.closeUp = closeUp;
         service.setCredentials = setCredentials;
         service.clearCredentials = clearCredentials;
 
         return service;
 
-        function login(username, password, successCallback, errorCallback) {
+        function login(username, password) {
+            var defered;
             $http.defaults.useXDomain = true;           
-            $http.post($rootScope.service+'/login', { username: username, password: password }).then(successCallback,errorCallback);               
+            defered = $http.post($rootScope.service+'/login', { username: username, password: password });
+            return defered;
+        }
+
+        function signup(username, email, password, confirmPassword) {
+            var defered;
+            $http.defaults.useXDomain = true;
+            defered = $http.post($rootScope.service+'/signup', { username: username, email: email, password: password, confirmPassword: confirmPassword });
+            return defered;
         }
         
-        function logout(successCallback, errorCallback) {
-            $http.defaults.useXDomain = true;           
-            $http.get($rootScope.service+'/logout').then(successCallback,errorCallback);               
+        function logout() {
+            var defered;
+            $http.defaults.useXDomain = true;
+            defered = $http.get($rootScope.service+'/logout');
+            return defered;
+        }
+
+        function closeUp(username) {
+            var defered;
+            $http.defaults.useXDomain = true;
+            defered = $http.get($rootScope.service+'/closeup');
+            return defered;
         }
 
         function setCredentials(token) {
@@ -37,7 +57,9 @@
 
         function clearCredentials() {
             $rootScope.auth = {};
-            $cookieStore.remove('auth');            
+            $cookieStore.remove('auth');
+            $cookieStore.remove('csrftoken');
+            delete $http.defaults.headers.common['Authorization'];
         }
     }
 

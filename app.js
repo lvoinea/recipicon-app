@@ -172,13 +172,20 @@
                 
             })
 
-            .state('register', {
-                url: '/register',
+            .state('user', {
+                url: '/user',
                  views : {
-                    "r-header": {},
+                     "r-header": {
+                        templateUrl: "header.html",
+                        params: {
+                            selection: 'user'
+                        },
+                        controller: 'HeaderController',
+                        controllerAs: 'vm'
+                    },
                     "r-body": {
-                        controller: 'RegisterController',
-                        templateUrl: 'authRegister.html',
+                        controller: 'UserController',
+                        templateUrl: 'user.html',
                         controllerAs: 'vm'
                     }
                 }                
@@ -216,6 +223,7 @@
         $rootScope.globals = $cookieStore.get('globals') || {};
         if ($rootScope.globals.currentUser) {
             $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
+            $httpProvider.defaults.headers.common['Content-Type'] =  'application/json';
         }
 
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
