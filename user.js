@@ -5,8 +5,8 @@
         .module('app')
         .controller('UserController', UserController);
 
-    UserController.$inject = ['$rootScope','$location', 'AuthenticationService', 'AlertService'];
-    function UserController($rootScope, $location, AuthenticationService, AlertService) {
+    UserController.$inject = ['$rootScope','$location', 'AuthenticationService', 'AlertService', 'DataService'];
+    function UserController($rootScope, $location, AuthenticationService, AlertService, DataService) {
         var vm = this;
         
         vm.closeUp = closeUp;
@@ -18,6 +18,7 @@
 
             vm.closingOut = true;
 
+            DataService.initialize();
             AuthenticationService.clearCredentials();
             AuthenticationService.closeUp()
             .then(function(response){
