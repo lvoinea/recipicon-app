@@ -24,21 +24,18 @@
             vm.loggingOut = true;
 
             DataService.initialize();
-            
-            // reset login status
             AuthenticationService.clearCredentials();
-            AuthenticationService.logout(success, failure);
-            
-            function success(response) {
+            AuthenticationService.logout()
+            .then(function(response){
                 vm.loggedOut = true;
+            })
+            .catch(function(response){
+                 AlertService.setAlert('ERROR: Could not logout.');
+            })
+            .finally(function(){
                 vm.loggingOut = false;
-            }
-            
-            function failure(response) {
-                AlertService.setAlert('ERROR: Could not logout.');
-                vm.loggingOut = false;
-            }
-        };        
+            });
+        };
     }
 
 })();
