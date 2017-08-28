@@ -5,32 +5,43 @@
         .module('app')
         .controller('LoginController', LoginController);
 
-    LoginController.$inject = ['$location', 'AuthenticationService', 'AlertService'];
-    function LoginController($location, AuthenticationService, AlertService) {
+    LoginController.$inject = ['$location', '$stateParams', 'AuthenticationService', 'AlertService'];
+    function LoginController($location, $stateParams, AuthenticationService, AlertService) {
         var vm = this;
 
         vm.login = login;
         vm.signup = signup;
-        vm.toggle = toggle;
+        vm.request = request;
+        vm.reset = reset;
+        vm.setMode = setMode;
         vm.minPasswordLength = 3;
+        vm.username = $stateParams.username;
+        vm.token = $stateParams.token;
+        vm.forgot = false;
 
-        vm.toggleLogin = true;
+        vm.mode = 'signin';
         vm.clearAlert = clearAlert;
 
         (function initController() {
             AuthenticationService.clearCredentials();
+            if ((vm.username != '') || (vm.token != '')){
+                vm.mode = 'reset';
+            }
         })();
 
         function login() {
-            AlertService.clearAlerts();
+            clearMessages()
             vm.dataLoading = true;
             AuthenticationService.login(vm.username, vm.password)
-            .then(function(response){                
+            .then(function(response){
                 $location.path('/recipes');
-                AuthenticationService.setCredentials(response.data);
+                AuthenticationService.setCredentials(vm.username, response.data);
             })
             .catch(function(response) {               
-                AlertService.setAlert('ERROR: Could not login (' + response.data + ')');
+                if (response.status == 401){
+                   vm.forgot = true;
+                }
+                AlertService.setAlert('ERROR: Could not login (' + response.data + ').');
             })
             .finally(function(){
                 vm.dataLoading = false;
@@ -38,7 +49,7 @@
         };
 
         function signup() {
-            AlertService.clearAlerts();
+            clearMessages()
             vm.dataLoading = true;
             if (vm.password != vm.confirmPassword) {
                 AlertService.setAlert('ERROR: The two passwords do not match!');
@@ -58,13 +69,37 @@
             }
         };
 
-        function toggle() {
-            vm.toggleLogin = !vm.toggleLogin;
+        function request() {
+            clearMessages()
+            vm.dataLoading = true;
+            vm.dataLoading = false;
+            $location.path('/out');
+        }
+
+        //TODO
+        function reset() {
+            clearMessages()
+            vm.dataLoading = true;
+            AuthenticationService.reset( vm.username, $rootScope.auth.token, vm.password, vm.confirmPassword)
+            .then()
+            .catch()
+            .finally()
+            vm.dataLoading = false;
+        }
+
+        function setMode(mode) {
+            vm.mode = mode;
+            vm.forgot = false;
             AlertService.clearAlerts();
         }
         
         function clearAlert(index){
             AlertService.clearAlert(index);
+        }
+
+        function clearMessages(){
+            AlertService.clearAlerts();
+            vm.forgot = false;
         }
     }
 

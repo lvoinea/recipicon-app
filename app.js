@@ -11,12 +11,12 @@
         $stateProvider
             .state('recipes', {
                 url: '/recipes',
+                params: {
+                    selection: 'recipes'
+                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
-                        params: {
-                            selection: 'recipes'
-                        },
                         controller: 'HeaderController',
                         controllerAs: 'vm'
                     },
@@ -31,12 +31,12 @@
             
             .state('recipe', {
                 url: '/recipe/:id',
+                params: {
+                    selection: 'recipe'
+                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
-                        params: {
-                            selection: 'recipe'
-                        },
                         controller: 'HeaderController',
                         controllerAs: 'vm'
                     },
@@ -51,12 +51,12 @@
             
             .state('recipe-edit', {
                 url: '/recipe-edit/:id',
+                params: {
+                    selection: 'recipe-edit'
+                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
-                        params: {
-                            selection: 'recipe-edit'
-                        },
                         controller: 'HeaderController',
                         controllerAs: 'vm'
                     },
@@ -71,12 +71,12 @@
             
             .state('shopping-list', {
                 url: '/shopping-list/:id',
+                params: {
+                    selection: 'shopping-list'
+                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
-                        params: {
-                            selection: 'shopping-list'
-                        },
                         controller: 'HeaderController',
                         controllerAs: 'vm'
                     },
@@ -90,12 +90,12 @@
             
             .state('shopping-list-edit', {
                 url: '/shopping-list-edit/:id',
+                params: {
+                    selection: 'shopping-list'
+                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
-                        params: {
-                            selection: 'shopping-list'
-                        },
                         controller: 'HeaderController',
                         controllerAs: 'vm'
                     },
@@ -109,12 +109,12 @@
             
             .state('shopping-list-organize', {
                 url: '/shopping-list-organize/:id',
+                params: {
+                    selection: 'shopping-list'
+                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
-                        params: {
-                            selection: 'shopping-list'
-                        },
                         controller: 'HeaderController',
                         controllerAs: 'vm'
                     },
@@ -128,12 +128,12 @@
 
              .state('statistics', {
                 url: '/statistics',
+                params: {
+                    selection: 'recipe'
+                },
                 views : {
                     "r-header": {
                         templateUrl: "header.html",
-                        params: {
-                            selection: 'recipe'
-                        },
                         controller: 'HeaderController',
                         controllerAs: 'vm'
                     },
@@ -148,11 +148,28 @@
 
             .state('login', {
                 url: '/login',
+                params: {
+                        'username': '',
+                        'tokrn':''
+                    },
                 views : {
                     "r-header": {},
                     "r-body": {
-                        controller: 'LoginController',
                         templateUrl: 'authLogin.html',
+                        controller: 'LoginController',
+                        controllerAs: 'vm'
+                    }
+                } 
+                
+            })
+
+            .state('reset', {
+                url: '/reset/:username/:token',
+                views : {
+                    "r-header": {},
+                    "r-body": {
+                        templateUrl: 'authLogin.html',
+                        controller: 'LoginController',
                         controllerAs: 'vm'
                     }
                 } 
@@ -174,12 +191,12 @@
 
             .state('user', {
                 url: '/user',
-                 views : {
+                params: {
+                    selection: 'user'
+                },
+                views : {
                      "r-header": {
                         templateUrl: "header.html",
-                        params: {
-                            selection: 'user'
-                        },
                         controller: 'HeaderController',
                         controllerAs: 'vm'
                     },
@@ -188,14 +205,24 @@
                         templateUrl: 'user.html',
                         controllerAs: 'vm'
                     }
-                }                
+                }
+            })
+
+             .state('out', {
+                url: '/out',
+                views : {
+                    "r-header": {},
+                    "r-body": {
+                        templateUrl: 'out.html'
+                    }
+                }
             })
 
             $urlRouterProvider.otherwise("/login");
             
             //Configure CSRF
             $httpProvider.defaults.xsrfCookieName = 'csrftoken';
-            $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';          
+            $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
             
     }
 

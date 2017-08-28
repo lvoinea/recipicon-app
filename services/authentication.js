@@ -46,8 +46,16 @@
             return defered;
         }
 
-        function setCredentials(token) {
+        function reset(username, token, password,confirmPassword) {
+            var defered;
+            $http.defaults.useXDomain = true;
+            defered = $http.post($rootScope.service+'/reset', { username: username, token: token, password: password, confirmPassword: confirmPassword });
+            return defered;
+        }
+
+        function setCredentials(user, token) {
             $rootScope.auth = {
+                user: user,
                 token: token
             };
 
