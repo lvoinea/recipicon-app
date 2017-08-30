@@ -150,7 +150,7 @@
                 url: '/login',
                 params: {
                         'username': '',
-                        'tokrn':''
+                        'token':''
                     },
                 views : {
                     "r-header": {},

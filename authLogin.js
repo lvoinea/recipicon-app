@@ -5,8 +5,8 @@
         .module('app')
         .controller('LoginController', LoginController);
 
-    LoginController.$inject = ['$location', '$stateParams', 'AuthenticationService', 'AlertService'];
-    function LoginController($location, $stateParams, AuthenticationService, AlertService) {
+    LoginController.$inject = ['$location', '$stateParams', '$rootScope', 'AuthenticationService', 'AlertService'];
+    function LoginController($location, $stateParams, $rootScope, AuthenticationService, AlertService) {
         var vm = this;
 
         vm.login = login;
@@ -24,7 +24,7 @@
 
         (function initController() {
             AuthenticationService.clearCredentials();
-            if ((vm.username != '') || (vm.token != '')){
+            if (vm.token != ''){
                 vm.mode = 'reset';
             }
         })();
@@ -70,21 +70,30 @@
         };
 
         function request() {
-            clearMessages()
+            clearMessages();
             vm.dataLoading = true;
             vm.dataLoading = false;
             $location.path('/out');
         }
 
-        //TODO
         function reset() {
-            clearMessages()
+            clearMessages();
             vm.dataLoading = true;
-            AuthenticationService.reset( vm.username, $rootScope.auth.token, vm.password, vm.confirmPassword)
-            .then()
-            .catch()
-            .finally()
-            vm.dataLoading = false;
+             if (vm.password != vm.confirmPassword) {
+                AlertService.setAlert('ERROR: The two passwords do not match!');
+                vm.dataLoading = false;
+            } else {
+                AuthenticationService.resetPassword( vm.username, vm.token, vm.password, vm.confirmPassword)
+                .then(function(response){
+                    $location.path('/login');
+                })
+                .catch(function(response){
+                    AlertService.setAlert('ERROR: Could not reset password : ' + response.data + ' !'); 
+                })
+                .finally(function(){
+                    vm.dataLoading = false;
+                })
+            }
         }
 
         function setMode(mode) {

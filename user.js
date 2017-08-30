@@ -10,6 +10,7 @@
         var vm = this;
 
         vm.username =  $rootScope.auth['user'];
+        vm.token =  $rootScope.auth['token'];
         
         vm.closeUp = closeUp;
         vm.clearAlert = AlertService.clearAlert;
