@@ -5,14 +5,14 @@
         .module('app')
         .controller('LoginController', LoginController);
 
-    LoginController.$inject = ['$location', '$stateParams', '$rootScope', 'AuthenticationService', 'AlertService'];
-    function LoginController($location, $stateParams, $rootScope, AuthenticationService, AlertService) {
+    LoginController.$inject = ['$location', '$stateParams', '$state', '$rootScope', 'AuthenticationService', 'AlertService'];
+    function LoginController($location, $stateParams, $state, $rootScope, AuthenticationService, AlertService) {
         var vm = this;
 
         vm.login = login;
         vm.signup = signup;
-        vm.request = request;
-        vm.reset = reset;
+        vm.requestPasswordRequest = requestPasswordRequest;
+        vm.resetPassword = resetPassword;
         vm.setMode = setMode;
         vm.minPasswordLength = 3;
         vm.username = $stateParams.username;
@@ -52,7 +52,7 @@
             clearMessages()
             vm.dataLoading = true;
             if (vm.password != vm.confirmPassword) {
-                AlertService.setAlert('ERROR: The two passwords do not match!');
+                AlertService.setAlert('ERROR: The two passwords do not match.');
                 vm.dataLoading = false;
             } else {
                 AuthenticationService.signup(vm.username, vm.username, vm.password, vm.confirmPassword)
@@ -61,7 +61,7 @@
                     AuthenticationService.setCredentials(response.data)
                 })
                 .catch(function(response){
-                    AlertService.setAlert('ERROR: Could not signup : ' + response.data + ' !'); 
+                    AlertService.setAlert('ERROR: Could not signup (' + response.data + ').'); 
                 })
                 .finally(function(){
                     vm.dataLoading = false;
@@ -69,26 +69,34 @@
             }
         };
 
-        function request() {
+        function requestPasswordRequest() {
             clearMessages();
             vm.dataLoading = true;
-            vm.dataLoading = false;
-            $location.path('/out');
+             AuthenticationService.requestPasswordReset(vm.username)
+                .then(function(response){
+                    $location.path('/out');
+                })
+                .catch(function(response){
+                    AlertService.setAlert('ERROR: Could not request password reset.'); 
+                })
+                .finally(function(){
+                    vm.dataLoading = false;
+                });
         }
 
-        function reset() {
+        function resetPassword() {
             clearMessages();
             vm.dataLoading = true;
              if (vm.password != vm.confirmPassword) {
-                AlertService.setAlert('ERROR: The two passwords do not match!');
+                AlertService.setAlert('ERROR: The two passwords do not match.');
                 vm.dataLoading = false;
             } else {
                 AuthenticationService.resetPassword( vm.username, vm.token, vm.password, vm.confirmPassword)
                 .then(function(response){
-                    $location.path('/login');
+                    $state.go('login',{'username': vm.username})
                 })
                 .catch(function(response){
-                    AlertService.setAlert('ERROR: Could not reset password : ' + response.data + ' !'); 
+                    AlertService.setAlert('ERROR: Could not reset password (' + response.data + ').'); 
                 })
                 .finally(function(){
                     vm.dataLoading = false;

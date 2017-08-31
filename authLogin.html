@@ -44,7 +44,7 @@
                 </div>
                  <div align="center" ng-show="vm.mode == 'request'">
                      <p>
-                        <button ng-disabled="form.$invalid || vm.dataLoading" class="btn btn-primary" ng-click="vm.request()">Send pasword reset request<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.dataLoading"></button>
+                        <button ng-disabled="form.$invalid || vm.dataLoading" class="btn btn-primary" ng-click="vm.requestPasswordRequest()">Send pasword reset request<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.dataLoading"></button>
                     </p>
                     <p>
                         No account yet? <a ng-click="vm.setMode('signup')">Sign-up!</a>
@@ -52,7 +52,7 @@
                 </div>
                 <div align="center" ng-show="vm.mode == 'reset'">
                      <p>
-                        <button ng-disabled="form.$invalid || vm.dataLoading" class="btn btn-primary" ng-click="vm.reset()">Reset password<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.dataLoading"></button>
+                        <button ng-disabled="form.$invalid || vm.dataLoading" class="btn btn-primary" ng-click="vm.resetPassword()">Reset password<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.dataLoading"></button>
                     </p>
                     <p>
                         Different user? <a ng-click="vm.username='';vm.setMode('signin')">Sign in!</a>

@@ -14,6 +14,7 @@
         service.signup = signup;
         service.closeUp = closeUp;
         service.resetPassword = resetPassword;
+        service.requestPasswordReset = requestPasswordReset;
         service.setCredentials = setCredentials;
         service.clearCredentials = clearCredentials;
 
@@ -51,6 +52,13 @@
             var defered;
             $http.defaults.useXDomain = true;
             defered = $http.post($rootScope.service+'/auth/password-reset', { username: username, token: token, password: password, confirmPassword: confirmPassword });
+            return defered;
+        }
+
+        function requestPasswordReset(username) {
+            var defered;
+            $http.defaults.useXDomain = true;
+            defered = $http.post($rootScope.service+'/auth/request-password-reset', {  username: username});
             return defered;
         }
 
