@@ -25,6 +25,11 @@
                 <span ng-show="vm.password!=vm.confirmPassword" class="help-block">Passwords should be identical.</span>
                 <span ng-show="form.confirm_password.$dirty && !form.confirm_password.$valid" class="help-block">Password should be at least {{vm.minPasswordLength}} characters</span>                
             </div>
+            <div class="form-group" ng-show="(vm.mode=='signup') || (vm.mode=='reset')">                
+                <input type="checkbox" ng-model="vm.agreement"/>
+                <span>I have read and I accept the service <a ng-click="vm.modalTerms()">terms and conditions</a>.</span>
+            </div>
+
             <div class="form-actions">
                 <div align="center" ng-show="vm.mode == 'signin'">
                     <p>

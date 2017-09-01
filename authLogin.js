@@ -5,8 +5,8 @@
         .module('app')
         .controller('LoginController', LoginController);
 
-    LoginController.$inject = ['$location', '$stateParams', '$state', '$rootScope', 'AuthenticationService', 'AlertService'];
-    function LoginController($location, $stateParams, $state, $rootScope, AuthenticationService, AlertService) {
+    LoginController.$inject = ['$location', '$stateParams', '$state', '$rootScope', 'AuthenticationService', 'AlertService','ModalService'];
+    function LoginController($location, $stateParams, $state, $rootScope, AuthenticationService, AlertService, ModalService) {
         var vm = this;
 
         vm.login = login;
@@ -14,10 +14,12 @@
         vm.requestPasswordRequest = requestPasswordRequest;
         vm.resetPassword = resetPassword;
         vm.setMode = setMode;
+        vm.modalTerms = modalTerms;
         vm.minPasswordLength = 3;
         vm.username = $stateParams.username;
         vm.token = $stateParams.token;
         vm.forgot = false;
+        vm.agreement = false;
 
         vm.mode = 'signin';
         vm.clearAlert = clearAlert;
@@ -54,7 +56,10 @@
             if (vm.password != vm.confirmPassword) {
                 AlertService.setAlert('ERROR: The two passwords do not match.');
                 vm.dataLoading = false;
-            } else {
+            } else if (! vm.agreement) {
+                AlertService.setAlert('ERROR: You can sign-up only if you agree with the service terms and conditions (see checkbox below).');
+                vm.dataLoading = false;
+            } else{
                 AuthenticationService.signup(vm.username, vm.username, vm.password, vm.confirmPassword)
                 .then(function(response){
                     $location.path('/recipes');
@@ -117,6 +122,20 @@
         function clearMessages(){
             AlertService.clearAlerts();
             vm.forgot = false;
+        }
+
+        function modalTerms(){
+            ModalService.showModal({
+              templateUrl: 'modalTerms.html',
+              controller: 'ModalTermsController',
+              controllerAs : 'vm'
+            })
+            .then(function(modal) {
+              modal.element.modal();
+              modal.close.then(function(choiceName) {
+                
+              });
+            });
         }
     }
 
