@@ -8,6 +8,9 @@
     UserController.$inject = ['$rootScope','$location', 'AuthenticationService', 'AlertService', 'DataService'];
     function UserController($rootScope, $location, AuthenticationService, AlertService, DataService) {
         var vm = this;
+
+        vm.username =  $rootScope.auth['user'];
+        vm.token =  $rootScope.auth['token'];
         
         vm.closeUp = closeUp;
         vm.clearAlert = AlertService.clearAlert;
