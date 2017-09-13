@@ -82,7 +82,7 @@
                     $location.path('/out');
                 })
                 .catch(function(response){
-                    AlertService.setAlert('ERROR: Could not request password reset.'); 
+                    AlertService.setAlert('ERROR: Could not request password reset (' + response.data + ').'); 
                 })
                 .finally(function(){
                     vm.dataLoading = false;
