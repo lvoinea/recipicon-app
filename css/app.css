@@ -79,3 +79,7 @@ button[disabled=disabled], button:disabled {
 .arc path {
   stroke: #fff;
 }
+
+.right {
+    text-align: right;
+}
