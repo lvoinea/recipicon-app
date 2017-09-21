@@ -26,7 +26,7 @@
     </div>
 
     </form>
-    <form name="recipe" novalidate>
+    <form name="recipe" ng-submit="" role="form" novalidate>
         <!-- ============================================ Recipe ===================================== -->
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -41,9 +41,9 @@
                         <div class="col-xs-8"><input type="text" class="form-control" ng-model="vm.recipe.name"></div>
                     </div>
                     <!-- -------------------------------------------------- Duration -->
-                    <div class="row">
+                    <div class="row"  ng-class="{ 'has-error': recipe.duration.$dirty && recipe.duration.$error.pattern }">
                         <div class="col-xs-4"><label>Duration (min):</label></div>
-                        <div class="col-xs-3"><input type="number" class="form-control" ng-model="vm.recipe.duration"></div>
+                        <div class="col-xs-4"><input type="number" class="form-control" name="duration" ng-model="vm.recipe.duration" ng-pattern="/^[0-9]*$/" pattern="\d*"></div>
                     </div>
                     <!-- ------------------------------------------------------ Type -->
                     <div class="row">
@@ -60,10 +60,10 @@
                         <div class="col-xs-8"><textarea  rows="10" class="form-control" ng-model="vm.recipe.description"></textarea></div>
                     </div>
                     <!-- ---------------------------------------------------- Serves -->
-                    <div class="row">
+                    <div class="row"  ng-class="{ 'has-error': recipe.serves.$dirty && recipe.serves.$error.pattern }">
                         <div class="col-xs-4"><label>Serves:</label></div>
-                        <div class="col-xs-3"><input type="number" class="form-control"ng-model="vm.recipe.serves"></div>
-                    </div>        
+                        <div class="col-xs-4"><input type="number" class="form-control" name="serves" ng-model="vm.recipe.serves" ng-pattern="/^[0-9]*$/" pattern="\d*"></div>
+                    </div>
             </div>
         </div>
        <!-- ============================================ Ingredients ===================================== -->
@@ -86,7 +86,7 @@
             
                 <div class="col-xs-12">
                     <div class="input-group">
-                        <input name="iname" class="form-control input-sm" autocomplete="off" id='ingredient' type="text" placeholder="Name" ng-model="vm.ingredient" uib-typeahead="ingredient for ingredient in vm.getIngredients() | filter:$viewValue | limitTo:8" required>
+                        <input name="iname" class="form-control input-sm" autocomplete="off" id='ingredient' type="text" placeholder="Name" ng-model="vm.ingredient" uib-typeahead="ingredient for ingredient in vm.getIngredients() | filter:$viewValue | limitTo:8">
                         <span class="input-group-btn" style="width:0px;"></span>
                         <input name="quantity"class="form-control input-sm" type="text" placeholder="Quantity" ng-model="vm.quantity" ng-enter="vm.addRecipeIngredient('ingredient')" ng-pattern="vm.regex" uib-popover="Format: 'quantity unit'">
                         <div class="input-group-btn">
@@ -102,7 +102,7 @@
         </div>
         <p class="text-center">
             <button type="button" class="btn btn-primary" ng-click="vm.cancel()">Cancel</button>
-            <button type="button" class="btn btn-primary" ng-click="vm.save()" ng-disabled="vm.adding"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.saving"></span> Save</button>
+            <button type="button" ng-disabled="recipe.$invalid" class="btn btn-primary" ng-click="vm.save()" ng-disabled="vm.adding"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-if="vm.saving"></span> Save</button>
         </p>
     </form>
 </div>

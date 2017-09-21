@@ -6,7 +6,7 @@
         Edit shopping list {{vm.shoppingList.name}} </br>
         <small>({{vm.shoppingList.date}})</small>
     </h3>
-    <form name="shoppingList" novalidate>
+    <form name="shoppingList" ng-submit="" role="form" novalidate>
         <div class="panel panel-default">
             <div class="panel-heading panel-title">
                    Name
@@ -24,7 +24,7 @@
                 <ul>
                     <li ng-repeat="item in vm.shoppingList.items | filter:{ingredient:null}">
                        <a ng-click="vm.deleteItem(item.id)"><span style="color:#ff471a;font-size:0.75em;" class="glyphicon glyphicon glyphicon-minus-sign selectable"></span></a>
-                       <input type="number" min="0" max="99999" ng-model="item.quantity">
+                       <input type="number" min="0" max="99999" ng-model="item.quantity" pattern="\d*">
                        {{item.recipe.name}}
                        </input>
                     </li>
@@ -47,7 +47,7 @@
                 </ul>            
                 <div class="col-xs-12">
                     <div class="input-group">
-                    <input name="iname"  class="form-control input-sm" autocomplete="off" id='ingredient'  type="text" placeholder="Name" ng-model="vm.ingredient" uib-typeahead="ingredient for ingredient in vm.getIngredientNames() | filter:$viewValue | limitTo:8" required>
+                    <input name="iname"  class="form-control input-sm" autocomplete="off" id='ingredient'  type="text" placeholder="Name" ng-model="vm.ingredient" uib-typeahead="ingredient for ingredient in vm.getIngredientNames() | filter:$viewValue | limitTo:8">
                     <span class="input-group-btn" style="width:0px;"></span>
                     <input name="quantity" class="form-control input-sm" type="text" placeholder="Quantity" ng-model="vm.quantity" ng-enter="vm.addItem('ingredient')" ng-pattern="vm.regex" uib-popover="Format: 'quantity unit'">
                         <div class="input-group-btn">
