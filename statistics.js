@@ -12,6 +12,7 @@
         vm.stats = null;
         vm.numberRecipes = null;
         vm.numberIngredients = null;
+        vm.numberShoppingLists = null;
        
         vm.loading = false;
 
@@ -25,6 +26,7 @@
                     vm.stats = stats;
                     vm.numberRecipes = stats['recipe_number'];
                     vm.numberIngredients = stats['ingredient_number'];
+                    vm.numberIngredients = stats['shoppingList_number'];
                     showRecipes("#recipeStatPanel");
                     showIngredients('#ingredientsStatPanel');
                 })
