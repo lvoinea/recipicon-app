@@ -26,7 +26,7 @@
                     vm.stats = stats;
                     vm.numberRecipes = stats['recipe_number'];
                     vm.numberIngredients = stats['ingredient_number'];
-                    vm.numberIngredients = stats['shoppingList_number'];
+                    vm.numberShoppingLists = stats['shoppingList_number'];
                     showRecipes("#recipeStatPanel");
                     showIngredients('#ingredientsStatPanel');
                 })

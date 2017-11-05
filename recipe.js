@@ -152,7 +152,7 @@
                 .then(function(resizedFile){
                     $log.info(resizedFile);
 
-                    Upload.base64DataUrl(vm.file)
+                    Upload.base64DataUrl(resizedFile)
                     .then(function(url){
                         vm.recipe.image = url;
                     })
